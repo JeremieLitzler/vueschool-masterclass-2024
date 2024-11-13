@@ -13,7 +13,10 @@
     "format": "prettier --write src/",
     "sp:init": "supabase init",
     "sp:login": "supabase login",
-    "sp:link": "dotenv -p -- supabase link --project-ref $SUPABASE_PROJECT_ID",
+    "sp:link": "supabase link --project-ref fchlybhrfvdisrcouxgc",
+    "sp:link-env": "source .env && supabase link --project-ref \"$SUPABASE_PROJECT_ID\"",
+    "db:migrate:new": "supabase migration new projects-schema",
+    "db:reset": "supabase db reset --linked",
     "debug": "dotenv -- node -e \"console.log(true)\""
   },
   "dependencies": {
