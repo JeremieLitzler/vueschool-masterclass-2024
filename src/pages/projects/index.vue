@@ -1,7 +1,9 @@
 <template>
   <div>
     <h1>Projects Page</h1>
-    <pre>{{ projects }}</pre>
+    <ul>
+      <li v-for="project in projects" :key="project?.id">{{ project?.name }}</li>
+    </ul>
     <RouterLink to="/">Go back Home</RouterLink>
   </div>
 </template>
@@ -11,7 +13,7 @@ import { DatabaseTable } from '@/enums/databaseTable'
 import { supabase } from '@/lib/supabaseClient'
 import { ref } from 'vue'
 
-const projects: any = ref([])
+const projects = ref<any | null>([])
 ;(async () => {
   console.log('Getting projects...')
 
