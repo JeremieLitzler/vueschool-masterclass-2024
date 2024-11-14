@@ -19,7 +19,7 @@ const projects: any = ref([])
 
   if (error) console.error(error)
 
-  projects = data
+  projects.value = data
   console.log('Got Projects', projects)
 })()
 </script>
