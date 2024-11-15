@@ -1,5 +1,6 @@
 <template>
   <RouterLink
+    exact-active-class="text-primary bg-muted"
     v-for="link in links"
     :key="link.to"
     :to="link.to"
@@ -17,5 +18,3 @@ defineProps<{
   links: LinkProp[]
 }>()
 </script>
-
-<style scoped></style>
