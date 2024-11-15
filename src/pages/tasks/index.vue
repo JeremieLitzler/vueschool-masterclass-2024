@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1>Projects Page</h1>
+    <h1>All tasks</h1>
     <ul>
       <li v-for="task in tasks" :key="task?.id">{{ task?.name }}</li>
     </ul>
-    <RouterLink to="/">Go back Home</RouterLink>
+    <RouterLink class="underline" to="/">Go back Home</RouterLink>
   </div>
 </template>
 
