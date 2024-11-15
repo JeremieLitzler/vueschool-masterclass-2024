@@ -1,6 +1,6 @@
 <template>
   <RouterLink
-    exact-active-class="text-primary bg-muted"
+    exact-active-class="text-black bg-green-300"
     v-for="link in links"
     :key="link.to"
     :to="link.to"
