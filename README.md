@@ -48,7 +48,7 @@ If you wonder how to use bash aliases to do the same thing that Mostafa does wit
 - create a `.bashrc` at the repo root.
 - define your aliases, for example:
 
-```
+```sh
 alias sp-init='supabase init'
 alias sp-login='supabase login'
 alias sp-link-env='source .env && echo "linking to $SUPABASE_PROJECT_ID ... using password=$SUPABASE_PROJECT_PASSWORD" && supabase link --project-ref $SUPABASE_PROJECT_ID'

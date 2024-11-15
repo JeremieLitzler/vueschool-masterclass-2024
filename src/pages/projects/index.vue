@@ -4,7 +4,6 @@
     <ul>
       <li v-for="project in projects" :key="project?.id">{{ project?.name }}</li>
     </ul>
-    <RouterLink class="underline" to="/">Go back Home</RouterLink>
   </div>
 </template>
 
