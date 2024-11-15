@@ -1,12 +1,11 @@
 # Then add these aliases:
 alias sp-init='supabase init'
 alias sp-login='supabase login'
-alias sp-link-env='source .env && echo "linking to $SUPABASE_PROJECT_ID ... using password=$SUPABASE_PROJECT_PASSWORD" && supabase link --project-ref $SUPABASE_PROJECT_ID <<< $SUPABASE_PROJECT_PASSWORD'
+alias sp-link-env='source .env && echo "linking to $SUPABASE_PROJECT_ID ... using password=$SUPABASE_PROJECT_PASSWORD" && supabase link --project-ref $SUPABASE_PROJECT_ID'
 alias sp-gen-types='source .env && supabase gen types --lang=typescript --project-id "$SUPABASE_PROJECT_ID" --schema public > src/types/database.types.ts'
 alias sp-db-migrate-new='supabase migration new "$1"'
 alias sp-dbreset='supabase db reset --linked'
 alias sp-dbseed='node --env-file=.env database/sedding.js'
 alias sp-dbrs='sp-dbreset && node --env-file=.env database/sedding.js'
 alias node-env-debug='source .env && node -e "console.log(true)"'
-alias sp-link-env-project='source .env && echo "linking to $SUPABASE_PROJECT_ID"'
 alias debug-alias='/usr/bin/echo "test"'

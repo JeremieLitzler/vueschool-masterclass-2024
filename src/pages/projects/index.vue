@@ -12,12 +12,13 @@
 import { DatabaseTable } from '@/enums/databaseTable'
 import { supabase } from '@/lib/supabaseClient'
 import { ref } from 'vue'
+import type { Tables } from '@/types/database.types'
 
-const projects = ref<any | null>([])
+const projects = ref<Tables<'projects'>[] | null>(null)
 ;(async () => {
   console.log('Getting projects...')
 
-  const { data, error } = await supabase.from(DatabaseTable.projects).select()
+  const { data, error } = await supabase.from('projects').select()
 
   if (error) console.error(error)
 
