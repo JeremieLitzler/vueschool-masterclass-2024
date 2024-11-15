@@ -1,6 +1,9 @@
-# vuejs-masterclass-2024
+# vuejs-masterclass-2024 from [VueSchool.io]
 
-This template should help get you started developing with Vue 3 in Vite.
+This repository contains the project I've coded while taking part of the course.
+The final result will vary a little.
+
+The live version of the project is found [here](https://vueschool-masterclass-2024.netlify.app/).
 
 ## Recommended IDE Setup
 
@@ -17,7 +20,7 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 ## Project Setup
 
 ```sh
-npm install
+npm i
 ```
 
 ### Compile and Hot-Reload for Development
@@ -37,3 +40,31 @@ npm run build
 ```sh
 npm run lint
 ```
+
+### Enabling alias for custom scripts
+
+If you wonder how to use bash aliases to do the same thing that Mostafa does with npm scripts, here how you do it:
+
+- create a `.bashrc` at the repo root.
+- define your aliases, for example:
+
+```
+alias sp-init='supabase init'
+alias sp-login='supabase login'
+alias sp-link-env='source .env && echo "linking to $SUPABASE_PROJECT_ID ... using password=$SUPABASE_PROJECT_PASSWORD" && supabase link --project-ref $SUPABASE_PROJECT_ID'
+alias sp-gen-types='source .env && supabase gen types --lang=typescript --project-id "$SUPABASE_PROJECT_ID" --schema public > src/types/database.types.ts'
+alias sp-db-migrate-new='supabase migration new "$1"'
+alias sp-dbreset='supabase db reset --linked'
+alias sp-dbseed='node --env-file=.env database/sedding.js'
+alias sp-dbrs='sp-dbreset && node --env-file=.env database/sedding.js'
+```
+
+- run `source .bashrc` from within the terminal in the repo root.
+- run any alias with it name.
+
+To check the aliases are loaded, run `alias` in the terminal.
+To reload the aliases after a change, run `source .bashrc` each time.
+
+I've tested that in Git bash for Windows.
+
+This repository contains a `.bashrc` file with the aliases I used on the project.
