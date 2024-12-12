@@ -1,21 +1,25 @@
 <script setup lang="ts">
 import { projectWithTasksQuery } from '@/utils/supabase-queries'
 import type { ProjectWithTasks } from '@/utils/supabase-queries'
-import { error } from 'console'
 
 /**
- * Passing the route path to useRoute solve the TypeScript error on accessing `slug` param
+ * TODO: Passing the route path to useRoute solve the TypeScript error on accessing `slug` param
  */
 const route = useRoute('/projects/[slug]')
 const project = ref<ProjectWithTasks | null>(null)
-const getProject = async () => {
-  const { data, error } = await projectWithTasksQuery(route.params.slug)
+const getProject = async (slug: string) => {
+  const { data, error } = await projectWithTasksQuery(slug)
   if (error) console.error(error)
 
   console.log(data)
 
   project.value = data
 }
+await getProject(route.params.slug)
+watch(
+  () => project.value?.name,
+  () => (usePageStore().pageData.title = `Project: ${project.value?.name || 'Not project found'}`),
+)
 </script>
 
 <template>
@@ -27,16 +31,12 @@ const getProject = async () => {
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad iure qui tempora ex nihil, ab
-        reprehenderit dolorem sunt veritatis perferendis? Repudiandae quis velit quasi ab natus quia
-        ratione voluptas deserunt labore sed distinctio nam fuga fugit vero voluptates placeat
-        aperiam, saepe excepturi eos harum consectetur doloremque perspiciatis nesciunt! Incidunt,
-        modi.
+        {{ project?.description || 'No description yet.' }}
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
-      <TableCell>In progress</TableCell>
+      <TableCell>{{ project?.status }}</TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Collaborators </TableHead>
@@ -44,8 +44,8 @@ const getProject = async () => {
         <div class="flex">
           <Avatar
             class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="n in 5"
-            :key="n"
+            v-for="collab in project?.collaborators"
+            :key="collab"
           >
             <RouterLink class="w-full h-full flex items-center justify-center" to="">
               <AvatarImage src="" alt="" />
@@ -70,10 +70,10 @@ const getProject = async () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="n in 5" :key="n">
-              <TableCell> Lorem ipsum dolor sit amet. </TableCell>
-              <TableCell> In progress </TableCell>
-              <TableCell> 22/08/2024 </TableCell>
+            <TableRow v-for="task in project?.tasks" :key="task.id">
+              <TableCell> {{ task.name }} </TableCell>
+              <TableCell> {{ task.status }} </TableCell>
+              <TableCell> {{ task.due_date }} </TableCell>
             </TableRow>
           </TableBody>
         </Table>

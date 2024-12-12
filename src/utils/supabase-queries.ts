@@ -19,7 +19,7 @@ export const projectWithTasksQuery = (slug: string) =>
       `
     *,
     tasks (
-      d,
+      id,
       name,
       status,
       due_date  
