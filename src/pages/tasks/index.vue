@@ -1,4 +1,12 @@
 <template>
+  <!-- 
+    This demonstrates that the DataTable could be entirely customized
+    using named and scoped slots.
+    
+    Slot in Vue.js is important to understand.
+
+    This is a great example.
+  -->
   <DataTable v-if="tasks" :columns="columns" :data="tasks" :use-slot="true">
     <template #cell-name="{ cell }">
       <RouterLink
@@ -44,8 +52,9 @@
 
 <script setup lang="ts">
 usePageStore().pageData.title = 'Tasks'
-import { tasksWithProjectQuery } from '@/utils/supabaseQueries'
-import type { TasksWithProject } from '@/utils/supabaseQueries'
+import { columns } from '@/utils/datatable-columns-task'
+import { tasksWithProjectQuery } from '@/utils/supabase-queries'
+import type { TasksWithProject } from '@/utils/supabase-queries'
 
 const tasks = ref<TasksWithProject | null>(null)
 const getTasks = async () => {
@@ -58,30 +67,6 @@ const getTasks = async () => {
   tasks.value = data
 }
 await getTasks()
-
-import type { ColumnDef } from '@tanstack/vue-table'
-const columns: ColumnDef<TasksWithProject[0]>[] = [
-  {
-    accessorKey: 'name',
-    header: () => h('div', { class: 'text-left' }, 'Name'),
-  },
-  {
-    accessorKey: 'status',
-    header: () => h('div', { class: 'text-left' }, 'Status'),
-  },
-  {
-    accessorKey: 'due_date',
-    header: () => h('div', { class: 'text-left' }, 'Due Date'),
-  },
-  {
-    accessorKey: 'project_id',
-    header: () => h('div', { class: 'text-left' }, 'Project'),
-  },
-  {
-    accessorKey: 'collaborators',
-    header: () => h('div', { class: 'text-left' }, 'Collaborators'),
-  },
-]
 </script>
 
 <style scoped></style>
