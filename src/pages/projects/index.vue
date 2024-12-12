@@ -7,13 +7,13 @@
 <script setup lang="ts">
 usePageStore().pageData.title = 'Projects'
 
-import { supabase } from '@/lib/supabaseClient'
-import type { Tables } from '@/types/database.types'
-const projects = ref<Tables<'projects'>[] | null>(null)
+import { allProjectsQuery } from '@/utils/supabaseQueries'
+import type { AllProjects } from '@/utils/supabaseQueries'
+const projects = ref<AllProjects | null>(null)
 const getProjects = async () => {
   console.log('Getting projects...')
 
-  const { data, error } = await supabase.from('projects').select()
+  const { data, error } = await allProjectsQuery
 
   if (error) console.error(error)
 
@@ -23,7 +23,7 @@ await getProjects()
 
 import type { ColumnDef } from '@tanstack/vue-table'
 import { RouterLink } from 'vue-router'
-const columns: ColumnDef<Tables<'projects'>>[] = [
+const columns: ColumnDef<AllProjects[0]>[] = [
   {
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),

@@ -44,30 +44,14 @@
 
 <script setup lang="ts">
 usePageStore().pageData.title = 'Tasks'
-
-import { supabase } from '@/lib/supabaseClient'
-import type { Tables } from '@/types/database.types'
-import type { QueryData } from '@supabase/supabase-js'
-
-const tasksWithProjectQuery = supabase.from('tasks').select(`
-    *, 
-    projects (
-      id, name, slug
-    )
-  `)
-
-type TasksWithProject = QueryData<typeof tasksWithProjectQuery>
+import { tasksWithProjectQuery } from '@/utils/supabaseQueries'
+import type { TasksWithProject } from '@/utils/supabaseQueries'
 
 const tasks = ref<TasksWithProject | null>(null)
 const getTasks = async () => {
   console.log('Getting projects...')
 
-  const { data, error } = await supabase.from('tasks').select(`
-    *, 
-    projects (
-      id, name, slug
-    )
-  `)
+  const { data, error } = await tasksWithProjectQuery
 
   if (error) console.error(error)
 
