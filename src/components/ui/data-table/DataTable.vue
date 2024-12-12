@@ -14,6 +14,7 @@ import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 const props = defineProps<{
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  useSlot?: boolean
 }>()
 
 const table = useVueTable({
@@ -49,7 +50,15 @@ const table = useVueTable({
             :data-state="row.getIsSelected() ? 'selected' : undefined"
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+              <slot v-if="useSlot" :name="`cell-${cell.column.id}`" :cell="cell">
+                <!-- {{
+                  Array.isArray(cell.getValue())
+                    ? `${JSON.stringify(row.getValue('collaborators'))} (is array)`
+                    : cell.getValue()
+                }} -->
+                <pre>{{ cell }}</pre>
+              </slot>
+              <FlexRender v-else :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </TableCell>
           </TableRow>
         </template>
