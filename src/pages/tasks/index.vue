@@ -33,7 +33,6 @@
 
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
-import { ref } from 'vue'
 import type { Tables } from '@/types/database.types'
 
 const tasks = ref<Tables<'tasks'>[] | null>(null)
@@ -47,7 +46,6 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
   tasks.value = data
 })()
 
-import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import DataTable from '@/components/ui/data-table/DataTable.vue'
 import { RouterLink } from 'vue-router'
