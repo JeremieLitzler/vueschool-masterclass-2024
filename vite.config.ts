@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 import VueRouter from 'unplugin-vue-router/vite'
+import { VueRouterAutoImports } from 'unplugin-vue-router'
 
 import tailwind from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
@@ -32,7 +33,7 @@ export default defineConfig({
       imports: [
         // presets
         'vue',
-        'vue-router',
+        VueRouterAutoImports,
       ],
       // Filepath to generate corresponding .d.ts file.
       // Defaults to './auto-imports.d.ts' when `typescript` is installed locally.
