@@ -57,7 +57,7 @@ watch(
     </TableRow>
   </Table>
 
-  <section class="mt-10 flex flex-col md:flex-row gap-5 justify-between grow">
+  <section v-if="project" class="mt-10 flex flex-col md:flex-row gap-5 justify-between grow">
     <div class="flex-1">
       <h2>Tasks</h2>
       <div class="table-container">

@@ -1,4 +1,6 @@
-# Then add these aliases:
+# To use the aliases below, make sure to run `source .bashrc`
+#
+# Then use these aliases:
 alias sp-init='supabase init'
 alias sp-login='supabase login'
 alias sp-link-env='source .env && echo "linking to $SUPABASE_PROJECT_ID ... using password=$SUPABASE_PROJECT_PASSWORD" && supabase link --project-ref $SUPABASE_PROJECT_ID'
