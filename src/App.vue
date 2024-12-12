@@ -2,6 +2,11 @@
 
 <template>
   <AuthLayout>
-    <RouterView />
+    <Suspense>
+      <RouterView />
+      <template #fallback>
+        <p>Loading...</p>
+      </template>
+    </Suspense>
   </AuthLayout>
 </template>

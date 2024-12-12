@@ -10,7 +10,7 @@ import { supabase } from '@/lib/supabaseClient'
 import type { Tables } from '@/types/database.types'
 
 const projects = ref<Tables<'projects'>[] | null>(null)
-;(async () => {
+const getProjects = async () => {
   console.log('Getting projects...')
 
   const { data, error } = await supabase.from('projects').select()
@@ -18,7 +18,9 @@ const projects = ref<Tables<'projects'>[] | null>(null)
   if (error) console.error(error)
 
   projects.value = data
-})()
+}
+
+await getProjects()
 
 import type { ColumnDef } from '@tanstack/vue-table'
 import { RouterLink } from 'vue-router'
