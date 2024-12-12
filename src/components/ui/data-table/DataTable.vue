@@ -42,12 +42,7 @@ const table = useVueTable({
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
               <slot v-if="useSlot" :name="`cell-${cell.column.id}`" :cell="cell">
-                <!-- {{
-                  Array.isArray(cell.getValue())
-                    ? `${JSON.stringify(row.getValue('collaborators'))} (is array)`
-                    : cell.getValue()
-                }} -->
-                <pre>{{ cell }}</pre>
+                {{ cell.getValue() }}
               </slot>
               <FlexRender v-else :render="cell.column.columnDef.cell" :props="cell.getContext()" />
             </TableCell>

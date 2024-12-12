@@ -19,9 +19,13 @@
       </div>
     </template>
     <template #cell-project_id="{ cell }">
-      <div class="text-left font-medium">
-        {{ cell.getValue() }}
-      </div>
+      <RouterLink
+        :to="`/projects/${cell.row.original.projects.slug}`"
+        class="text-left underline hover:bg-muted block w-full font-medium"
+      >
+        <!-- <pre>cell = {{ cell.row.projects }}</pre> -->
+        {{ cell.row.original.projects.name }}
+      </RouterLink>
     </template>
     <template #cell-collaborators="{ cell }">
       <div class="text-left font-medium">
@@ -40,7 +44,12 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
 const getTasks = async () => {
   console.log('Getting projects...')
 
-  const { data, error } = await supabase.from('tasks').select()
+  const { data, error } = await supabase.from('tasks').select(`
+    *, 
+    projects (
+      id, name, slug
+    )
+  `)
 
   if (error) console.error(error)
 
