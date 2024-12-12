@@ -21,13 +21,21 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import DataTable from '@/components/ui/data-table/DataTable.vue'
+import { RouterLink } from 'vue-router'
 
 const columns: ColumnDef<Tables<'tasks'>>[] = [
   {
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),
     cell: ({ row }) => {
-      return h('div', { class: 'text-left font-medium' }, row.getValue('name'))
+      return h(
+        RouterLink,
+        {
+          to: `/tasks/${row.original.id}`,
+          class: 'text-left underline hover:bg-muted block w-full font-medium',
+        },
+        () => row.getValue('name'),
+      )
     },
   },
   {
