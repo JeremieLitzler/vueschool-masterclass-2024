@@ -27,7 +27,6 @@
 <script setup lang="ts">
 import type { LinkProp } from '@/types/LinkProp'
 import SideBarLinks from '@/components/layout/SidebarLinks.vue'
-import Button from '@/components/ui/button/Button.vue'
 
 const topLinks: LinkProp[] = [
   {
@@ -56,5 +55,5 @@ const settingsLinks: LinkProp[] = [
   },
 ]
 </script>
-
+IMPORT SideBarLinks
 <style scoped></style>

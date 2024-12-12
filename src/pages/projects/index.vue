@@ -21,9 +21,7 @@ const projects = ref<Tables<'projects'>[] | null>(null)
 })()
 
 import type { ColumnDef } from '@tanstack/vue-table'
-import DataTable from '@/components/ui/data-table/DataTable.vue'
 import { RouterLink } from 'vue-router'
-
 const columns: ColumnDef<Tables<'projects'>>[] = [
   {
     accessorKey: 'name',

@@ -10,6 +10,7 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
 import tailwind from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
 import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -43,6 +44,7 @@ export default defineConfig({
       // Recommend to enable
       viteOptimizeDeps: true,
     }),
+    Components({}),
     vueDevTools(),
   ],
   css: {
