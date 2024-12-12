@@ -32,9 +32,10 @@
 </template>
 
 <script setup lang="ts">
+usePageStore().pageData.title = 'Tasks'
+
 import { supabase } from '@/lib/supabaseClient'
 import type { Tables } from '@/types/database.types'
-
 const tasks = ref<Tables<'tasks'>[] | null>(null)
 const getTasks = async () => {
   console.log('Getting projects...')
@@ -45,7 +46,6 @@ const getTasks = async () => {
 
   tasks.value = data
 }
-
 await getTasks()
 
 import type { ColumnDef } from '@tanstack/vue-table'

@@ -1,14 +1,14 @@
 <template>
   <div>
-    <h1>All projects</h1>
     <DataTable v-if="projects" :columns="columns" :data="projects" />
   </div>
 </template>
 
 <script setup lang="ts">
+usePageStore().pageData.title = 'Projects'
+
 import { supabase } from '@/lib/supabaseClient'
 import type { Tables } from '@/types/database.types'
-
 const projects = ref<Tables<'projects'>[] | null>(null)
 const getProjects = async () => {
   console.log('Getting projects...')
@@ -19,7 +19,6 @@ const getProjects = async () => {
 
   projects.value = data
 }
-
 await getProjects()
 
 import type { ColumnDef } from '@tanstack/vue-table'
