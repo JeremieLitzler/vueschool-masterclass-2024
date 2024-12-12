@@ -36,7 +36,7 @@ import { supabase } from '@/lib/supabaseClient'
 import type { Tables } from '@/types/database.types'
 
 const tasks = ref<Tables<'tasks'>[] | null>(null)
-;(async () => {
+const getTasks = async () => {
   console.log('Getting projects...')
 
   const { data, error } = await supabase.from('tasks').select()
@@ -44,7 +44,9 @@ const tasks = ref<Tables<'tasks'>[] | null>(null)
   if (error) console.error(error)
 
   tasks.value = data
-})()
+}
+
+await getTasks()
 
 import type { ColumnDef } from '@tanstack/vue-table'
 const columns: ColumnDef<Tables<'tasks'>>[] = [
