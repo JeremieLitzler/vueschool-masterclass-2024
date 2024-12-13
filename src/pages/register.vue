@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { supabase } from '@/lib/supabaseClient'
 import type { RegistrationData } from '@/types/RegistrationData'
-import { insertUserProfile } from '@/utils/supabase-queries'
+import { signupWithSupabase } from '@/utils/supabase-auth'
 
 const formData = ref<RegistrationData>({
   username: '',
@@ -16,24 +15,8 @@ const router = useRouter()
 
 const signup = async () => {
   // Authenticate
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email: formData.value.email,
-    password: formData.value.password,
-  })
-
-  if (authError) return useErrorStore().setAuthError({ authError })
-
-  // Create profile
-  if (authData.user) {
-    const { data, error } = await insertUserProfile({
-      user: authData.user,
-      formData: formData.value,
-    })
-
-    if (error) return useErrorStore().setError({ error })
-  }
-
-  router.push('/')
+  const { error } = await signupWithSupabase({ formData: formData.value })
+  if (!error) return router.push('/')
 }
 </script>
 

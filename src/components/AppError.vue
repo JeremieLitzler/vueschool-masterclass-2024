@@ -8,9 +8,10 @@ const error = ref(activeError)
 const message = ref('')
 const customCode = ref(0)
 const details = ref('')
-const code = ref('')
+const code = ref<string | undefined>(undefined)
 const hint = ref('')
 const statusCode = ref(0)
+const nextPage = ref<string | undefined>(undefined)
 
 if (error.value && !('code' in error.value)) {
   message.value = error.value.message
@@ -19,10 +20,19 @@ if (error.value && !('code' in error.value)) {
 
 if (error.value && 'code' in error.value) {
   message.value = error.value.message
-  details.value = error.value.details
-  hint.value = error.value.hint
   code.value = error.value.code
+}
+if (error.value && 'hint' in error.value) {
+  hint.value = error.value.hint
+}
+if (error.value && 'details' in error.value) {
+  details.value = error.value.details
+}
+if (error.value && 'statusCode' in error.value) {
   statusCode.value = error.value.statusCode ?? 0
+}
+if (error.value && 'nextPage' in error.value) {
+  nextPage.value = error.value.nextPage
 }
 
 const ErrorTemplate = import.meta.env.DEV
@@ -36,7 +46,7 @@ router.afterEach(() => {
 
 <template>
   <section class="error">
-    <ErrorTemplate :message :customCode :code :statusCode :hint :details :isCustomError />
+    <ErrorTemplate :message :customCode :code :statusCode :hint :details :isCustomError :nextPage />
   </section>
 </template>
 

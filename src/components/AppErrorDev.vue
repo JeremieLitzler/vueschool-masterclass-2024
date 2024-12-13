@@ -6,6 +6,7 @@ defineProps<{
   statusCode: number
   hint: string | null
   details: string
+  nextPage: string
 }>()
 </script>
 
@@ -18,8 +19,11 @@ defineProps<{
     <p v-if="hint">Hint: {{ hint }}</p>
     <p v-if="details">Details: {{ details }}</p>
     <div class="error-footer">
-      <RouterLink to="/">
+      <RouterLink v-if="!nextPage" to="/">
         <Button class="max-w-36"> Back to homepage </Button>
+      </RouterLink>
+      <RouterLink v-else :to="nextPage">
+        <Button class="max-w-36"> Back </Button>
       </RouterLink>
     </div>
   </div>

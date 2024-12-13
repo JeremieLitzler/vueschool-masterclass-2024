@@ -1,26 +1,36 @@
 import type { ErrorExtended } from '@/types/ErrorExtended'
 import type { PostgrestErrorExtended } from '@/types/PostgrestErrorExtended'
+import type {
+  SupabaseAuthApiErrorExtended,
+  SupabaseAuthErrorExtended,
+} from '@/types/SupabaseAuthErrorExtended'
 import { AuthApiError, AuthError, type PostgrestError } from '@supabase/supabase-js'
 
 export const useErrorStore = defineStore('error-store', () => {
-  const activeError = ref<null | PostgrestErrorExtended | AuthApiError | AuthError | ErrorExtended>(
-    null,
-  )
+  const activeError = ref<
+    | null
+    | PostgrestErrorExtended
+    | SupabaseAuthApiErrorExtended
+    | SupabaseAuthErrorExtended
+    | ErrorExtended
+  >(null)
   const isCustomError = ref(false)
   const setError = ({
     error,
     customCode,
+    nextPage,
   }: {
-    error: string | PostgrestError | AuthError | Error
+    error: string | PostgrestErrorExtended | Error
     customCode?: number
+    nextPage?: string
   }) => {
     const errorIsString = typeof error === 'string'
-
     if (errorIsString) isCustomError.value = true
     if (errorIsString || error instanceof Error) {
       console.log('Received a string error')
       activeError.value = errorIsString ? Error(error) : error
       activeError.value.customCode = customCode || 500
+      if (nextPage) activeError.value.nextPage = nextPage
       return
     }
 
@@ -32,7 +42,13 @@ export const useErrorStore = defineStore('error-store', () => {
     ;(activeError.value as PostgrestErrorExtended).statusCode = customCode || 500
   }
 
-  const setAuthError = ({ authError }: { authError: AuthError | AuthApiError }) => {
+  const setAuthError = ({
+    authError,
+    nextPage,
+  }: {
+    authError: AuthError | AuthApiError
+    nextPage: string
+  }) => {
     if (authError instanceof AuthError) {
       console.error('Got an AuthError')
     }
@@ -41,6 +57,7 @@ export const useErrorStore = defineStore('error-store', () => {
     }
     console.log('Received a PostgrestError error')
     activeError.value = authError
+    activeError.value.nextPage = nextPage
   }
 
   const clearError = () => {
