@@ -1,6 +1,6 @@
 import type { ErrorExtended } from '@/types/ErrorExtended'
 import type { PostgrestErrorExtended } from '@/types/PostgrestErrorExtended'
-import type { PostgrestError } from '@supabase/supabase-js'
+import { AuthError, type PostgrestError } from '@supabase/supabase-js'
 
 export const useErrorStore = defineStore('error-store', () => {
   const activeError = ref<null | PostgrestErrorExtended | ErrorExtended>(null)
@@ -9,7 +9,7 @@ export const useErrorStore = defineStore('error-store', () => {
     error,
     customCode,
   }: {
-    error: string | PostgrestError | Error
+    error: string | PostgrestError | AuthError | Error
     customCode?: number
   }) => {
     const errorIsString = typeof error === 'string'
@@ -22,6 +22,9 @@ export const useErrorStore = defineStore('error-store', () => {
       return
     }
 
+    // if (!errorIsString && error instanceof AuthError) {
+
+    // }
     console.log('Received a PostgrestError error')
     activeError.value = error
     ;(activeError.value as PostgrestErrorExtended).statusCode = customCode || 500
