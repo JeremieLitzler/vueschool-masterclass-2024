@@ -5,9 +5,10 @@ import { type TaskFromIdWithProject } from '@/utils/supabase-queries'
 const route = useRoute('/tasks/[id]')
 const task = ref<TaskFromIdWithProject | null>(null)
 const getProject = async (taskId: string) => {
-  const { data, error } = await taskFromIdWithProjectQuery(taskId)
-  if (error) console.error(error)
-
+  const { data, error, status } = await taskFromIdWithProjectQuery(taskId)
+  if (error) {
+    useErrorStore().setError({ error: error, customCode: status })
+  }
   console.log(data)
 
   task.value = data

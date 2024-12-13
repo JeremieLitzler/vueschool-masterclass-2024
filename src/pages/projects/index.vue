@@ -14,9 +14,11 @@ const projects = ref<AllProjects | null>(null)
 const getProjects = async () => {
   console.log('Getting projects...')
 
-  const { data, error } = await allProjectsQuery
+  const { data, error, status } = await allProjectsQuery
 
-  if (error) console.error(error)
+  if (error) {
+    useErrorStore().setError({ error: error, customCode: status })
+  }
 
   projects.value = data
 }

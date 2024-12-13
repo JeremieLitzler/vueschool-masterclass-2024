@@ -60,9 +60,11 @@ const tasks = ref<TasksWithProject | null>(null)
 const getTasks = async () => {
   console.log('Getting projects...')
 
-  const { data, error } = await tasksWithProjectQuery
+  const { data, error, status } = await tasksWithProjectQuery
 
-  if (error) console.error(error)
+  if (error) {
+    useErrorStore().setError({ error, customCode: status })
+  }
 
   tasks.value = data
 }
