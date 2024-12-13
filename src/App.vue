@@ -8,7 +8,7 @@ onErrorCaptured((error) => {
 
 <template>
   <AuthLayout>
-    <AppErrorPage v-if="activeError" />
+    <AppError v-if="activeError" />
     <RouterView v-else v-slot="{ Component, route }">
       <Suspense v-if="Component" :timeout="0">
         <!-- With Suspence, the current component remains loaded until
