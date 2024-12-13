@@ -69,6 +69,7 @@ const getTasks = async () => {
   tasks.value = data
 }
 await getTasks()
+hello
 </script>
 
 <style scoped></style>
