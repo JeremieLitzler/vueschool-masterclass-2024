@@ -23,6 +23,8 @@ if (error.value && 'code' in error.value) {
   statusCode.value = error.value.statusCode ?? 0
 }
 
+const isProdEnv = import.meta.env.PROD
+
 router.afterEach(() => {
   useErrorStore().activeError = null
 })
@@ -32,10 +34,9 @@ router.afterEach(() => {
     <div>
       <iconify-icon icon="lucide:triangle-alert" class="error__icon" />
       <h1 v-if="customCode > 0" class="error__code">{{ customCode }}</h1>
-      <p v-if="statusCode > 0" class="error__code">Status Code: {{ statusCode }}</p>
       <p class="error__msg">{{ message }}</p>
       <!-- Using implicit prop value syntax -->
-      <AppErrorDevSection :code :details :hint />
+      <AppErrorDevSection v-if="!isProdEnv" :code :details :hint :status-code="statusCode" />
       <div class="error-footer">
         <p class="error-footer__text">You'll find lots to explore on the home page.</p>
         <RouterLink to="/">
@@ -55,11 +56,12 @@ router.afterEach(() => {
   @apply text-7xl text-destructive;
 }
 
-.error__code {
+/* :deep propagate the style to the children components */
+:deep(.error__code) {
   @apply font-extrabold text-7xl text-secondary;
 }
 
-.error__msg {
+:deep(.error__msg) {
   @apply text-3xl font-extrabold text-primary;
 }
 
