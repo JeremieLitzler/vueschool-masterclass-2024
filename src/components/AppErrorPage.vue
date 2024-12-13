@@ -34,13 +34,8 @@ router.afterEach(() => {
       <h1 v-if="customCode > 0" class="error__code">{{ customCode }}</h1>
       <p v-if="statusCode > 0" class="error__code">Status Code: {{ statusCode }}</p>
       <p class="error__msg">{{ message }}</p>
-      <p v-if="hint">{{ hint }}</p>
-      <p>
-        <i v-if="code"> {{ code }}: </i
-        ><span v-if="details">
-          {{ details }}
-        </span>
-      </p>
+      <!-- Using implicit prop value syntax -->
+      <AppErrorDevSection :code :details :hint />
       <div class="error-footer">
         <p class="error-footer__text">You'll find lots to explore on the home page.</p>
         <RouterLink to="/">
