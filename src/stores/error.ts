@@ -1,7 +1,6 @@
 import type { ErrorExtended } from '@/types/ErrorExtended'
 import type { PostgrestErrorExtended } from '@/types/PostgrestErrorExtended'
 import { AuthApiError, AuthError, type PostgrestError } from '@supabase/supabase-js'
-import { error } from 'console'
 
 export const useErrorStore = defineStore('error-store', () => {
   const activeError = ref<null | PostgrestErrorExtended | AuthApiError | AuthError | ErrorExtended>(

@@ -1,4 +1,26 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { supabase } from '@/lib/supabaseClient'
+import type { LoginData } from '@/types/LoginData'
+
+const formData = ref<LoginData>({
+  email: '',
+  password: '',
+})
+
+const router = useRouter()
+
+const sigin = async () => {
+  // Authenticate
+  const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+    email: formData.value.email,
+    password: formData.value.password,
+  })
+
+  if (authError) return useErrorStore().setAuthError({ authError })
+
+  router.push('/')
+}
+</script>
 
 <template>
   <div class="mx-auto flex w-full justify-center items-center p-10 text-center -mt-20 min-h-[90vh]">
@@ -13,17 +35,28 @@
           <Separator label="Or" />
         </div>
 
-        <form class="grid gap-4">
+        <form class="grid gap-4" @submit.prevent="sigin">
           <div class="grid gap-2">
             <Label id="email" class="text-left">Email</Label>
-            <Input type="email" placeholder="johndoe19@example.com" required />
+            <Input
+              v-model="formData.email"
+              type="email"
+              placeholder="johndoe19@example.com"
+              required
+            />
           </div>
           <div class="grid gap-2">
             <div class="flex items-center">
               <Label id="password">Password</Label>
               <a href="#" class="inline-block ml-auto text-xs underline"> Forgot your password? </a>
             </div>
-            <Input id="password" type="password" autocomplete required />
+            <Input
+              v-model="formData.password"
+              id="password"
+              type="password"
+              autocomplete
+              required
+            />
           </div>
           <Button type="submit" class="w-full"> Login </Button>
         </form>
