@@ -3,6 +3,8 @@ import type { RegistrationData } from '@/types/RegistrationData'
 import { insertUserProfile } from './supabase-queries'
 import type { LoginData } from '@/types/LoginData'
 
+const authStore = useAuth()
+
 export const signupWithSupabase = async ({ formData }: { formData: RegistrationData }) => {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email: formData.email,
@@ -24,9 +26,10 @@ export const signupWithSupabase = async ({ formData }: { formData: RegistrationD
 
     if (error) {
       useErrorStore().setError({ error, nextPage: nextRouteOnError })
-      return { error: null }
+      return { error }
     }
 
+    authStore.setAuth(authData.session)
     return { error: null }
   }
 
@@ -47,5 +50,6 @@ export const siginpWithSupabase = async ({ formData }: { formData: LoginData }) 
     return { error: authError }
   }
 
+  authStore.setAuth(authData.session)
   return { error: null }
 }
