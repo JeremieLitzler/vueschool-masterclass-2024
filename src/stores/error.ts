@@ -73,3 +73,7 @@ export const useErrorStore = defineStore('error-store', () => {
     clearError,
   }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(usePageStore, import.meta.hot))
+}

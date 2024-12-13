@@ -45,3 +45,7 @@ export const useAuth = defineStore('auth-store', () => {
   }
   return { user, profile, setAuth, setProfile, logout }
 })
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(usePageStore, import.meta.hot))
+}
