@@ -70,8 +70,14 @@ watch(
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="task in project?.tasks" :key="task.id">
-              <TableCell> {{ task.name }} </TableCell>
+            <TableRow v-for="task in project.tasks" :key="task.id">
+              <TableCell
+                ><RouterLink
+                  :to="`/tasks/${task.id}`"
+                  class="text-left underline hover:bg-muted block w-full font-medium"
+                  >{{ task.name }}</RouterLink
+                ></TableCell
+              >
               <TableCell> {{ task.status }} </TableCell>
               <TableCell> {{ task.due_date }} </TableCell>
             </TableRow>
