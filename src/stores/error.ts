@@ -1,9 +1,12 @@
 import type { ErrorExtended } from '@/types/ErrorExtended'
 import type { PostgrestErrorExtended } from '@/types/PostgrestErrorExtended'
-import { AuthError, type PostgrestError } from '@supabase/supabase-js'
+import { AuthApiError, AuthError, type PostgrestError } from '@supabase/supabase-js'
+import { error } from 'console'
 
 export const useErrorStore = defineStore('error-store', () => {
-  const activeError = ref<null | PostgrestErrorExtended | ErrorExtended>(null)
+  const activeError = ref<null | PostgrestErrorExtended | AuthApiError | AuthError | ErrorExtended>(
+    null,
+  )
   const isCustomError = ref(false)
   const setError = ({
     error,
@@ -30,6 +33,17 @@ export const useErrorStore = defineStore('error-store', () => {
     ;(activeError.value as PostgrestErrorExtended).statusCode = customCode || 500
   }
 
+  const setAuthError = ({ authError }: { authError: AuthError | AuthApiError }) => {
+    if (authError instanceof AuthError) {
+      console.error('Got an AuthError')
+    }
+    if (authError instanceof AuthApiError) {
+      console.error('Got an AuthApiError')
+    }
+    console.log('Received a PostgrestError error')
+    activeError.value = authError
+  }
+
   const clearError = () => {
     activeError.value = null
     isCustomError.value = false
@@ -39,6 +53,7 @@ export const useErrorStore = defineStore('error-store', () => {
     activeError,
     isCustomError,
     setError,
+    setAuthError,
     clearError,
   }
 })

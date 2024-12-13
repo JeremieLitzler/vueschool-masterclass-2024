@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
-import type { QueryData } from '@supabase/supabase-js'
+import type { RegistrationData } from '@/types/RegistrationData'
+import type { QueryData, User } from '@supabase/supabase-js'
 
 export const allProjectsQuery = supabase.from('projects').select()
 export type AllProjects = QueryData<typeof allProjectsQuery>
@@ -43,3 +44,18 @@ export const taskFromIdWithProjectQuery = (taskId: string) =>
     .eq('id', taskId)
     .single()
 export type TaskFromIdWithProject = QueryData<ReturnType<typeof taskFromIdWithProjectQuery>>
+
+export const insertUserProfile = async ({
+  user,
+  formData,
+}: {
+  user: User
+  formData: RegistrationData
+}) => {
+  const result = await supabase.from('profiles').insert({
+    id: user.id,
+    username: formData.username,
+    full_name: `${formData.firstName} ${formData.lastName}`,
+  })
+  return result
+}
