@@ -55,5 +55,4 @@ const settingsLinks: LinkProp[] = [
   },
 ]
 </script>
-IMPORT SideBarLinks
 <style scoped></style>
