@@ -4,7 +4,15 @@ import { insertUserProfileQuery } from './supabase-queries'
 import type { LoginData } from '@/types/LoginData'
 import { RouterPathEnum } from '@/types/RouterPathEnum'
 
-export const signupWithSupabase = async ({ formData }: { formData: RegistrationData }) => {
+/**
+ * TODO: Before enabling this...
+ *  > see https://github.com/orgs/supabase/discussions/29370
+ *  > see https://supabase.com/docs/guides/auth/auth-smtp
+ *
+ * @param RegistrationData Object containing the form data
+ * @returns
+ */
+export const signupWithEmail = async ({ formData }: { formData: RegistrationData }) => {
   const { data: authData, error: authError } = await supabase.auth.signUp({
     email: formData.email,
     password: formData.password,
@@ -34,6 +42,8 @@ export const signupWithSupabase = async ({ formData }: { formData: RegistrationD
   useErrorStore().setError({ error: uncaughtError, nextPage: RouterPathEnum.Register })
   return { error: uncaughtError }
 }
+
+export const signupWithGoogle = () => false
 
 export const loginWithSupabase = async ({ formData }: { formData: LoginData }) => {
   // Authenticate

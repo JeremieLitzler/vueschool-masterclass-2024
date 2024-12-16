@@ -16,6 +16,7 @@ const router = createRouter({
 const routesSkippingGetSession = [RouterPathEnum.Login as string, RouterPathEnum.Register as string]
 router.beforeEach(async (to, _from) => {
   const authStore = useAuthStore()
+  // Must wait for the session to be available before processing the routing...
   await authStore.getSession()
 
   const isAuthPage = routesSkippingGetSession.includes(to.path)

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { RegistrationData } from '@/types/RegistrationData'
-import { signupWithSupabase } from '@/utils/supabase-auth'
+import { signupWithEmail } from '@/utils/supabase-auth'
 
 const formData = ref<RegistrationData>({
   username: '',
@@ -15,7 +15,7 @@ const router = useRouter()
 
 const signup = async () => {
   // Authenticate
-  const { error } = await signupWithSupabase({ formData: formData.value })
+  const { error } = await signupWithEmail({ formData: formData.value })
   if (!error) return router.push('/')
 }
 </script>
