@@ -9,6 +9,7 @@ const formData = ref<LoginData>({
 })
 
 const router = useRouter()
+const { realtimeErrors, handleLoginForm } = useFormError()
 
 const sigin = async () => {
   const { error } = await loginWithSupabase({ formData: formData.value })
@@ -38,6 +39,9 @@ const sigin = async () => {
               placeholder="johndoe19@example.com"
               required
             />
+            <ul class="text-sm text-left text-red-500" v-if="realtimeErrors?.email.length">
+              <li v-for="error in realtimeErrors.email" :key="error">{{ error }}</li>
+            </ul>
           </div>
           <div class="grid gap-2">
             <div class="flex items-center">
@@ -51,6 +55,9 @@ const sigin = async () => {
               autocomplete
               required
             />
+            <ul class="text-sm text-left text-red-500" v-if="realtimeErrors?.password.length">
+              <li v-for="error in realtimeErrors.password" :key="error">{{ error }}</li>
+            </ul>
           </div>
           <Button type="submit" class="w-full"> Login </Button>
         </form>
