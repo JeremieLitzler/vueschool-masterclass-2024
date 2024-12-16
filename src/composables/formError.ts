@@ -1,7 +1,10 @@
 import type { LoginData } from '@/types/LoginData'
 
+type FormsErrors<Type> = {
+  [Property in keyof Type]: string[]
+}
 export const useFormError = () => {
-  const realtimeErrors = ref()
+  const realtimeErrors = ref<FormsErrors<LoginData>>()
   const handleLoginForm = async (formData: LoginData) => {
     realtimeErrors.value = {
       email: [],
