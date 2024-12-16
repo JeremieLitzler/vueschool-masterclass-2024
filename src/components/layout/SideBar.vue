@@ -44,7 +44,10 @@ const executeAction = async (payload: SideBarLinkAction) => {
   }
 }
 
-const { profile } = storeToRefs(useAuthStore())
+const { useAuthStore } = await import('@/stores/auth')
+const authStore = useAuthStore()
+await authStore.getSession()
+const { profile } = storeToRefs(authStore)
 const topLinks: LinkProp[] = [
   {
     to: RouterPathEnum.Home,
@@ -60,6 +63,7 @@ const topLinks: LinkProp[] = [
 ]
 const settingsLinks: LinkProp[] = [
   {
+    //TODO > username is undefined
     to: `${RouterPathEnum.Profile}s/${profile?.value?.username}`,
     icon: 'lucide:user',
     label: 'Profile',
