@@ -1,7 +1,10 @@
 import { RouterLink } from 'vue-router'
 import type { ColumnDef } from '@tanstack/vue-table'
 import type { AllProjects } from './supabase-queries'
-export const columns: ColumnDef<AllProjects[0]>[] = [
+import type { GroupedCollabs } from '@/types/GroupedCollabs'
+import Avatar from '@/components/ui/avatar/Avatar.vue'
+import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
+export const columns = (collabs: Ref<GroupedCollabs>): ColumnDef<AllProjects[0]>[] => [
   {
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),
@@ -40,7 +43,9 @@ export const columns: ColumnDef<AllProjects[0]>[] = [
       return h(
         'div',
         { class: 'text-left font-medium' },
-        JSON.stringify(row.getValue('collaborators')),
+        collabs.value[row.original.id].map((collab) => {
+          return h(Avatar, () => h(AvatarImage, { src: collab.avatar_url || '' }))
+        }),
       )
     },
   },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DataTable v-if="projects" :columns="columns" :data="projects" />
+    <DataTable v-if="projects" :columns="columnsWithCollabs" :data="projects" />
   </div>
 </template>
 
@@ -18,8 +18,10 @@ const { projects } = storeToRefs(projectStore)
 // the projects are loaded
 await useProjectStore().getProjects()
 
-const { getGroupedCollabs } = useCollabs()
+const { groupedCollabs, getGroupedCollabs } = useCollabs()
 await getGroupedCollabs(projects.value)
+
+const columnsWithCollabs = columns(groupedCollabs)
 </script>
 
 <style scoped></style>
