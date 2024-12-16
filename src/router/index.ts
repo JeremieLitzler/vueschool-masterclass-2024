@@ -13,12 +13,8 @@ const router = createRouter({
   routes,
 })
 
-const routesSkippingGetSession = [
-  RouterPathEnum.Login as string,
-  RouterPathEnum.Logout as string,
-  RouterPathEnum.Register as string,
-]
-router.beforeEach(async (to) => {
+const routesSkippingGetSession = [RouterPathEnum.Login as string, RouterPathEnum.Register as string]
+router.beforeEach(async (to, _from) => {
   if (!routesSkippingGetSession.includes(to.path)) {
     const { stillAuthenticated } = await useAuthStore().getSession()
     if (!stillAuthenticated) router.push(RouterPathEnum.Login as string)

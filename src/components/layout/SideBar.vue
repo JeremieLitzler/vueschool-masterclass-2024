@@ -32,13 +32,15 @@ import { SideBarActionsEnum } from '@/types/SideBarActionsEnum'
 import type { SideBarLinkAction } from '@/types/SideBarLinkAction'
 import router from '@/router'
 
-const executeAction = (payload: SideBarLinkAction) => {
+const executeAction = async (payload: SideBarLinkAction) => {
   console.log('Clicked a side bar link', payload)
 
   if (payload.action === SideBarActionsEnum.Logout) {
-    console.log('Logging out...')
-    useAuthStore().logout()
-    router.push('/login')
+    const { isLoggedOut } = await useAuthStore().logout()
+    if (isLoggedOut) {
+      console.log('Logging out...')
+      router.push('/login')
+    }
   }
 }
 
