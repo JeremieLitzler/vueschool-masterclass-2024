@@ -2,6 +2,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import type { LoginData } from '@/types/LoginData'
 import { loginWithSupabase } from '@/utils/supabase-auth'
+import { watchDebounced } from '@vueuse/core'
 
 const formData = ref<LoginData>({
   email: '',
@@ -11,6 +12,18 @@ const formData = ref<LoginData>({
 const router = useRouter()
 const { realtimeErrors, handleLoginForm } = useFormError()
 
+watchDebounced(
+  formData,
+  async () => {
+    console.log('Run handleLoginForm...')
+    await handleLoginForm(formData.value)
+    console.log('with watchDebounced', realtimeErrors.value)
+  },
+  {
+    debounce: 1000,
+    deep: true,
+  },
+)
 const sigin = async () => {
   const { error } = await loginWithSupabase({ formData: formData.value })
   if (!error) return router.push('/')
@@ -56,7 +69,7 @@ const sigin = async () => {
               required
             />
             <ul class="text-sm text-left text-red-500" v-if="realtimeErrors?.password.length">
-              <li v-for="error in realtimeErrors.password" :key="error">{{ error }}</li>
+              <li v-for="error in realtimeErrors.password" :key="error">- {{ error }}</li>
             </ul>
           </div>
           <Button type="submit" class="w-full"> Login </Button>

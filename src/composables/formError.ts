@@ -9,9 +9,12 @@ export const useFormError = () => {
     }
     const { validateEmail, validatePassword } = await import('@/utils/form-validations')
     const emailErrors = validateEmail(formData.email)
+    console.log(`Ran validateEmail on ${formData.email}`, emailErrors)
     if (emailErrors.length) realtimeErrors.value.email = emailErrors
+
     const passwordErrors = validatePassword(formData.password)
-    if (emailErrors.length) realtimeErrors.value.password = passwordErrors
+    console.log(`Ran validatePassword on ${formData.email}`, passwordErrors)
+    if (passwordErrors.length) realtimeErrors.value.password = passwordErrors
   }
   return { handleLoginForm, realtimeErrors }
 }
