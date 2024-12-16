@@ -49,7 +49,6 @@ const settingsLinks: LinkProp[] = [
   },
   { to: '/settings', icon: 'lucide:settings', label: 'Settings' },
   {
-    to: '/signout',
     icon: 'lucide:log-out',
     label: 'Sign out',
   },
