@@ -1,14 +1,14 @@
-import { AuthError, type Session, type User } from '@supabase/supabase-js'
+import { type Session, type User } from '@supabase/supabase-js'
 import type { Tables } from '@/types/database.types'
 import { userProfileQuery } from '@/utils/supabase-queries'
 import { logoutFromSupabase, retrieveCurrentSession } from '@/utils/supabase-auth'
 import { RouterPathEnum } from '@/types/RouterPathEnum'
-
-const router = useRouter()
+import { supabase } from '@/lib/supabaseClient'
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
   const profile = ref<null | Tables<'profiles'> | any>(null)
+  const isTrackingAuthChanges = ref(false)
 
   const setAuth = async ({
     session,
@@ -30,15 +30,16 @@ export const useAuthStore = defineStore('auth-store', () => {
   const setProfile = async ({ nextPageOnError }: { nextPageOnError?: string }) => {
     if (!user.value) {
       // no user = no possible to fetch a profile
-      router.push('/login')
+      profile.value = null
+      return
     }
     if (profile.value) {
       // profile already fetched
-      return
+      return null
     }
     if (profile.value && profile.value.id === user.value?.id) {
       // profile is matching the user
-      return
+      return null
     }
 
     // otherwise let's fetch the profile
@@ -54,7 +55,6 @@ export const useAuthStore = defineStore('auth-store', () => {
 
     if (data?.session?.user) {
       console.log('User session valid')
-      await setAuth({ session: data.session, nextPageOnError: RouterPathEnum.Login })
       return { stillAuthenticated: true }
     } else {
       return { stillAuthenticated: false }
@@ -66,8 +66,20 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (authError) {
       useErrorStore().setAuthError({ authError, nextPage: RouterPathEnum.Login })
     }
-    setAuth({ session: null })
     console.log('Logout executed!')
   }
-  return { user, profile, setAuth, setProfile, getSession, logout }
+
+  const trackAuthChanges = () => {
+    if (isTrackingAuthChanges.value) {
+      return
+    }
+    isTrackingAuthChanges.value = false
+    supabase.auth.onAuthStateChange((event, session) => {
+      // See https://supabase.com/docs/reference/javascript/auth-onauthstatechange
+      setTimeout(async () => {
+        await useAuthStore().setAuth({ session })
+      }, 0)
+    })
+  }
+  return { user, profile, setAuth, setProfile, getSession, logout, trackAuthChanges }
 })

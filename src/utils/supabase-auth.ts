@@ -27,10 +27,6 @@ export const signupWithSupabase = async ({ formData }: { formData: RegistrationD
       return { error }
     }
 
-    await useAuthStore().setAuth({
-      session: authData.session,
-      nextPageOnError: RouterPathEnum.Register,
-    })
     return { error: null }
   }
 
@@ -51,10 +47,6 @@ export const loginWithSupabase = async ({ formData }: { formData: LoginData }) =
     return { error: authError }
   }
 
-  await useAuthStore().setAuth({
-    session: authData.session,
-    nextPageOnError: RouterPathEnum.Register,
-  })
   return { error: null }
 }
 

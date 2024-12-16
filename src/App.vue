@@ -1,7 +1,9 @@
 <script setup lang="ts">
 const errorStore = useErrorStore()
 const { activeError } = storeToRefs(errorStore)
-onMounted(async () => {})
+onMounted(async () => {
+  useAuthStore().trackAuthChanges()
+})
 onErrorCaptured((error) => {
   errorStore.setError({ error })
 })
