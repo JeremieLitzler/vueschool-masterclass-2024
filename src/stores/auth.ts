@@ -1,6 +1,7 @@
 import type { Session, User } from '@supabase/supabase-js'
 import type { Tables } from '@/types/database.types'
 import { userProfileQuery } from '@/utils/supabase-queries'
+import { retrieveCurrentSession } from '@/utils/supabase-auth'
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
@@ -46,11 +47,24 @@ export const useAuthStore = defineStore('auth-store', () => {
     profile.value = data
   }
 
+  const getSession = async () => {
+    const { data } = await retrieveCurrentSession()
+    if (data?.session?.user) {
+      console.log('User session valid')
+      await setAuth({ session: data.session, nextPageOnError: '/login' })
+    } else {
+      useErrorStore().setError({
+        error: Error('Session expired. Please login again'),
+        nextPage: '/login',
+      })
+    }
+  }
+
   const logout = () => {
     user.value = null
     profile.value = null
   }
-  return { user, profile, setAuth, setProfile, logout }
+  return { user, profile, setAuth, setProfile, getSession, logout }
 })
 
 if (import.meta.hot) {
