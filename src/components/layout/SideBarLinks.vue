@@ -1,18 +1,19 @@
 <template>
-  <RouterLink
-    exact-active-class="text-black bg-green-300"
-    v-for="link in realLinks"
-    :key="link.to"
-    :to="link.to"
-    class="side-bar-link"
-  >
-    <iconify-icon :icon="link.icon"></iconify-icon>
-    <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
-  </RouterLink>
-  <div v-for="link in nonLinks" :key="link.label" class="side-bar-link cursor-pointer">
-    <iconify-icon :icon="link.icon"></iconify-icon>
-    <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
-  </div>
+  <template v-for="link in links" :key="link.to">
+    <RouterLink
+      v-if="link.to"
+      :to="link.to"
+      exact-active-class="text-black bg-green-300"
+      class="side-bar-link"
+    >
+      <iconify-icon :icon="link.icon"></iconify-icon>
+      <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
+    </RouterLink>
+    <div v-else class="side-bar-link cursor-pointer">
+      <iconify-icon :icon="link.icon"></iconify-icon>
+      <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -21,9 +22,6 @@ import type { LinkProp } from '@/types/LinkProp'
 const { links } = defineProps<{
   links: LinkProp[]
 }>()
-
-const realLinks = links.filter((link): link is LinkProp & { to: string } => !!link.to)
-const nonLinks = links.filter((link): link is LinkProp & { to: string } => !!!link.to)
 </script>
 <style lang="css" scoped>
 .side-bar-link {
