@@ -5,6 +5,7 @@ import type { GroupedCollabs } from '@/types/GroupedCollabs'
 import Avatar from '@/components/ui/avatar/Avatar.vue'
 import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
 import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
+
 export const columns = (collabs: Ref<GroupedCollabs>): ColumnDef<AllProjects[0]>[] => [
   {
     accessorKey: 'name',
@@ -46,11 +47,15 @@ export const columns = (collabs: Ref<GroupedCollabs>): ColumnDef<AllProjects[0]>
         { class: 'text-left font-medium' },
         collabs.value[row.original.id]
           ? collabs.value[row.original.id].map((collab) => {
-              return h(Avatar, () => h(AvatarImage, { src: collab.avatar_url || '' }))
+              return h(RouterLink, { to: `/users/${collab.username}` }, () => {
+                return h(Avatar, { class: 'hover:scale-110 transition-transform' }, () =>
+                  h(AvatarImage, { src: collab.avatar_url || '' }),
+                )
+              })
             })
-          : row.original.collaborators.map(() =>
-              h(Avatar, { class: 'animate-pulse' }, () => h(AvatarFallback)),
-            ),
+          : row.original.collaborators.map(() => {
+              return h(Avatar, { class: 'animate-pulse' }, () => h(AvatarFallback))
+            }),
       )
     },
   },

@@ -16,10 +16,10 @@ const { projects } = storeToRefs(projectStore)
 // projects is reactive from the project store.
 // as soon as the getProjects is called and done,
 // the projects are loaded
-useProjectStore().getProjects()
+await projectStore.getProjects()
 
 const { groupedCollabs, getGroupedCollabs } = useCollabs()
-await getGroupedCollabs(projects.value)
+getGroupedCollabs(projects.value)
 
 const columnsWithCollabs = columns(groupedCollabs)
 </script>
