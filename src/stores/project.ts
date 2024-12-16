@@ -1,11 +1,24 @@
-import { projectWithTasksQuery } from '@/utils/supabase-queries'
+import { allProjectsQuery, projectWithTasksQuery } from '@/utils/supabase-queries'
 import type { ProjectWithTasks } from '@/utils/supabase-queries'
+import { useMemoize } from '@vueuse/core'
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 
-export const useProject = defineStore('project-store', () => {
+export const useProjectStore = defineStore('project-store', () => {
   const project = ref<ProjectWithTasks | null>(null)
+
+  const loadProjects = useMemoize(async (key: string) => await allProjectsQuery)
+  const getProjects = async () => {
+    const { data, error, status } = await loadProjects('projects')
+
+    if (error) {
+      useErrorStore().setError({ error: error, customCode: status })
+    }
+    return data
+  }
+
+  const loadProject = useMemoize(async (slug: string) => await projectWithTasksQuery(slug))
   const getProject = async (slug: string) => {
-    const { data, error } = await projectWithTasksQuery(slug)
+    const { data, error } = await loadProject(slug)
     if (error) console.error(error)
 
     console.log(data)
@@ -16,6 +29,7 @@ export const useProject = defineStore('project-store', () => {
   return {
     project,
     getProject,
+    getProjects,
   }
 })
 

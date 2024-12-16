@@ -58,15 +58,7 @@ import type { TasksWithProject } from '@/utils/supabase-queries'
 
 const tasks = ref<TasksWithProject | null>(null)
 const getTasks = async () => {
-  console.log('Getting projects...')
-
-  const { data, error, status } = await tasksWithProjectQuery
-
-  if (error) {
-    useErrorStore().setError({ error, customCode: status })
-  }
-
-  tasks.value = data
+  tasks.value = await useTaskStore().getTasks()
 }
 await getTasks()
 </script>
