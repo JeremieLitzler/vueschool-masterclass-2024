@@ -2,10 +2,11 @@ import { StoreCacheKey } from '@/types/StoreCacheKeys'
 import { allProjectsQuery, projectWithTasksQuery } from '@/utils/supabase-queries'
 import type { AllProjects, ProjectWithTasks } from '@/utils/supabase-queries'
 import { useMemoize } from '@vueuse/core'
+import { error } from 'console'
 import type { RouteLocationNormalizedLoadedTyped } from 'vue-router'
 
 export const useProjectStore = defineStore('project-store', () => {
-  const projects = ref<AllProjects | null>(null)
+  const projects = ref<AllProjects>([])
   const project = ref<ProjectWithTasks | null>(null)
 
   const validateProjectsCache = (cacheKey: string) => {
@@ -15,6 +16,9 @@ export const useProjectStore = defineStore('project-store', () => {
           return
         } else {
           loadProjects.delete(cacheKey)
+          if (!error && data) {
+            projects.value = data
+          }
         }
       })
     }
@@ -26,7 +30,9 @@ export const useProjectStore = defineStore('project-store', () => {
     if (error) {
       useErrorStore().setError({ error: error, customCode: status })
     }
-    projects.value = data
+    if (data) {
+      projects.value = data
+    }
     validateProjectsCache(StoreCacheKey.AllProjects)
   }
 
