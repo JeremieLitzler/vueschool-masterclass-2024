@@ -15,9 +15,17 @@ const router = createRouter({
 
 const routesSkippingGetSession = [RouterPathEnum.Login as string, RouterPathEnum.Register as string]
 router.beforeEach(async (to, _from) => {
-  if (!routesSkippingGetSession.includes(to.path)) {
-    const { stillAuthenticated } = await useAuthStore().getSession()
-    if (!stillAuthenticated) router.push(RouterPathEnum.Login as string)
+  const authStore = useAuthStore()
+  await authStore.getSession()
+
+  const isAuthPage = routesSkippingGetSession.includes(to.path)
+
+  if (!authStore.user && !isAuthPage) {
+    router.push(RouterPathEnum.Login as string)
+  }
+
+  if (authStore.user && isAuthPage) {
+    router.push('/')
   }
 })
 
