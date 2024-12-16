@@ -15,10 +15,11 @@ export const useAuthStore = defineStore('auth-store', () => {
     nextPageOnError,
   }: {
     session: null | Session
-    nextPageOnError: string
+    nextPageOnError?: string
   }) => {
     if (!session) {
       user.value = null
+      profile.value = null
       return
     }
 
@@ -26,7 +27,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     await setProfile({ nextPageOnError })
   }
 
-  const setProfile = async ({ nextPageOnError }: { nextPageOnError: string }) => {
+  const setProfile = async ({ nextPageOnError }: { nextPageOnError?: string }) => {
     if (!user.value) {
       // no user = no possible to fetch a profile
       router.push('/login')
@@ -65,8 +66,7 @@ export const useAuthStore = defineStore('auth-store', () => {
     if (authError) {
       useErrorStore().setAuthError({ authError, nextPage: RouterPathEnum.Login })
     }
-    user.value = null
-    profile.value = null
+    setAuth({ session: null })
     console.log('Logout executed!')
   }
   return { user, profile, setAuth, setProfile, getSession, logout }

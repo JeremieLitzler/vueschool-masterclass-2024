@@ -1,8 +1,9 @@
 <script setup lang="ts">
-const { activeError } = storeToRefs(useErrorStore())
+const errorStore = useErrorStore()
+const { activeError } = storeToRefs(errorStore)
 onMounted(async () => {})
 onErrorCaptured((error) => {
-  useErrorStore().setError({ error })
+  errorStore.setError({ error })
 })
 </script>
 
