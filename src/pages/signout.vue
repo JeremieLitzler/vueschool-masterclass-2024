@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useAuth().logout()
+useAuthStore().logout()
 const router = useRouter()
 router.push('/')
 </script>

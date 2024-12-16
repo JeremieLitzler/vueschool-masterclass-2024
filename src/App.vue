@@ -1,6 +1,18 @@
 <script setup lang="ts">
-const { activeError } = storeToRefs(useErrorStore())
+import { retrieveCurrentSession } from './utils/supabase-auth'
 
+const { activeError } = storeToRefs(useErrorStore())
+const authStore = useAuthStore()
+onMounted(async () => {
+  const { data } = await retrieveCurrentSession()
+  if (data?.session?.user) {
+    console.log('User session valid')
+
+    await authStore.setAuth({ session: data.session, nextPageOnError: '/login' })
+  } else {
+    console.log('User session invalid')
+  }
+})
 onErrorCaptured((error) => {
   useErrorStore().setError({ error })
 })

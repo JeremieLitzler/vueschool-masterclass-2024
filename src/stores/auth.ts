@@ -2,17 +2,24 @@ import type { Session, User } from '@supabase/supabase-js'
 import type { Tables } from '@/types/database.types'
 import { userProfileQuery } from '@/utils/supabase-queries'
 
-export const useAuth = defineStore('auth-store', () => {
+export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
   const profile = ref<null | Tables<'profiles'> | any>(null)
 
-  const setAuth = (session: null | Session) => {
+  const setAuth = async ({
+    session,
+    nextPageOnError,
+  }: {
+    session: null | Session
+    nextPageOnError: string
+  }) => {
     if (!session) {
       user.value = null
       return
     }
 
     user.value = session.user
+    await setProfile({ nextPageOnError })
   }
 
   const setProfile = async ({ nextPageOnError }: { nextPageOnError: string }) => {

@@ -3,7 +3,10 @@ import type { RegistrationData } from '@/types/RegistrationData'
 import { insertUserProfileQuery } from './supabase-queries'
 import type { LoginData } from '@/types/LoginData'
 
-const authStore = useAuth()
+// const authStore = useAuthStore()
+
+const registerPage = '/register'
+const loginPage = '/login'
 
 export const signupWithSupabase = async ({ formData }: { formData: RegistrationData }) => {
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -11,9 +14,8 @@ export const signupWithSupabase = async ({ formData }: { formData: RegistrationD
     password: formData.password,
   })
 
-  const nextPageOnError = '/register'
   if (authError) {
-    useErrorStore().setAuthError({ authError, nextPage: nextPageOnError })
+    useErrorStore().setAuthError({ authError, nextPage: registerPage })
     return { error: authError }
   }
 
@@ -25,34 +27,43 @@ export const signupWithSupabase = async ({ formData }: { formData: RegistrationD
     })
 
     if (error) {
-      useErrorStore().setError({ error, nextPage: nextPageOnError })
+      useErrorStore().setError({ error, nextPage: registerPage })
       return { error }
     }
 
-    authStore.setAuth(authData.session)
-    await authStore.setProfile({ nextPageOnError })
+    await useAuthStore().setAuth({ session: authData.session, nextPageOnError: registerPage })
     return { error: null }
   }
 
   const uncaughtError = Error(`Authenticated user <${formData.email}> is absent.`)
-  useErrorStore().setError({ error: uncaughtError, nextPage: nextPageOnError })
+  useErrorStore().setError({ error: uncaughtError, nextPage: registerPage })
   return { error: uncaughtError }
 }
 
-export const siginpWithSupabase = async ({ formData }: { formData: LoginData }) => {
+export const loginWithSupabase = async ({ formData }: { formData: LoginData }) => {
   // Authenticate
-  const nextPageOnError = '/login'
   const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
     email: formData.email,
     password: formData.password,
   })
 
   if (authError) {
-    useErrorStore().setAuthError({ authError, nextPage: nextPageOnError })
+    useErrorStore().setAuthError({ authError, nextPage: loginPage })
     return { error: authError }
   }
 
-  authStore.setAuth(authData.session)
-  await authStore.setProfile({ nextPageOnError })
+  await useAuthStore().setAuth({ session: authData.session, nextPageOnError: registerPage })
   return { error: null }
+}
+
+export const retrieveCurrentSession = async () => {
+  const { data, error: authError } = await supabase.auth.getSession()
+
+  if (authError) {
+    useErrorStore().setAuthError({ authError, nextPage: loginPage })
+    return { error: authError }
+  }
+
+  console.log('getSession', data)
+  return { data }
 }

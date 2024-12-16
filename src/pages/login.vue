@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { supabase } from '@/lib/supabaseClient'
 import type { LoginData } from '@/types/LoginData'
-import { siginpWithSupabase } from '@/utils/supabase-auth'
+import { loginWithSupabase } from '@/utils/supabase-auth'
 
 const formData = ref<LoginData>({
   email: '',
@@ -11,7 +11,7 @@ const formData = ref<LoginData>({
 const router = useRouter()
 
 const sigin = async () => {
-  const { error } = await siginpWithSupabase({ formData: formData.value })
+  const { error } = await loginWithSupabase({ formData: formData.value })
   if (!error) return router.push('/')
 }
 </script>

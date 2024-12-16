@@ -58,6 +58,7 @@ declare global {
   const unref: typeof import('vue')['unref']
   const useAttrs: typeof import('vue')['useAttrs']
   const useAuth: typeof import('./src/stores/auth')['useAuth']
+  const useAuthStore: typeof import('./src/stores/auth')['useAuthStore']
   const useCssModule: typeof import('vue')['useCssModule']
   const useCssVars: typeof import('vue')['useCssVars']
   const useErrorState: typeof import('./src/stores/error')['useErrorState']
