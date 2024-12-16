@@ -9,15 +9,23 @@
       <iconify-icon :icon="link.icon"></iconify-icon>
       <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
     </RouterLink>
-    <div v-else class="side-bar-link cursor-pointer">
+    <button v-else class="side-bar-link cursor-pointer" @click="actionClicked(link.action)">
       <iconify-icon :icon="link.icon"></iconify-icon>
       <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
-    </div>
+    </button>
   </template>
 </template>
 
 <script setup lang="ts">
 import type { LinkProp } from '@/types/LinkProp'
+import type { SideBarActionsEnum } from '@/types/SideBarActionsEnum'
+import type { SideBarLinkAction } from '@/types/SideBarLinkAction'
+const emits = defineEmits<{
+  (event: '@actionClicked', entry: SideBarLinkAction): void
+  // '@actionClicked': [SideBarLinkAction]
+}>()
+const actionClicked = (action: SideBarActionsEnum | undefined) =>
+  emits('@actionClicked', { action })
 
 const { links } = defineProps<{
   links: LinkProp[]

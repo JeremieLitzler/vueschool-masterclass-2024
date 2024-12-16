@@ -1,7 +1,10 @@
-import type { Session, User } from '@supabase/supabase-js'
+import { AuthError, type Session, type User } from '@supabase/supabase-js'
 import type { Tables } from '@/types/database.types'
 import { userProfileQuery } from '@/utils/supabase-queries'
-import { retrieveCurrentSession } from '@/utils/supabase-auth'
+import { logoutFromSupabase, retrieveCurrentSession } from '@/utils/supabase-auth'
+import { RouterPathEnum } from '@/types/RouterPathEnum'
+
+const router = useRouter()
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
@@ -26,10 +29,7 @@ export const useAuthStore = defineStore('auth-store', () => {
   const setProfile = async ({ nextPageOnError }: { nextPageOnError: string }) => {
     if (!user.value) {
       // no user = no possible to fetch a profile
-      useErrorStore().setError({
-        error: Error('No user is authenticated'),
-        nextPage: nextPageOnError,
-      })
+      router.push('/login')
     }
     if (profile.value) {
       // profile already fetched
@@ -48,25 +48,26 @@ export const useAuthStore = defineStore('auth-store', () => {
   }
 
   const getSession = async () => {
-    const { data } = await retrieveCurrentSession()
+    const { data, error } = await retrieveCurrentSession()
+    console.log('retrieveCurrentSession', error)
+
     if (data?.session?.user) {
       console.log('User session valid')
-      await setAuth({ session: data.session, nextPageOnError: '/login' })
+      await setAuth({ session: data.session, nextPageOnError: RouterPathEnum.Login })
+      return { stillAuthenticated: true }
     } else {
-      useErrorStore().setError({
-        error: Error('Session expired. Please login again'),
-        nextPage: '/login',
-      })
+      return { stillAuthenticated: false }
     }
   }
 
-  const logout = () => {
+  const logout = async () => {
+    const { error: authError } = await logoutFromSupabase()
+    if (authError) {
+      useErrorStore().setAuthError({ authError, nextPage: RouterPathEnum.Login })
+    }
     user.value = null
     profile.value = null
+    console.log('Logout executed!')
   }
   return { user, profile, setAuth, setProfile, getSession, logout }
 })
-
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(usePageStore, import.meta.hot))
-}

@@ -18,7 +18,7 @@
       </div>
 
       <div class="border-y text-center bg-background py-3">
-        <SideBarLinks :links="settingsLinks" />
+        <SideBarLinks :links="settingsLinks" @@action-clicked="executeAction" />
       </div>
     </nav>
   </aside>
@@ -27,29 +27,44 @@
 <script setup lang="ts">
 import type { LinkProp } from '@/types/LinkProp'
 import SideBarLinks from '@/components/layout/SidebarLinks.vue'
+import { RouterPathEnum } from '@/types/RouterPathEnum'
+import { SideBarActionsEnum } from '@/types/SideBarActionsEnum'
+import type { SideBarLinkAction } from '@/types/SideBarLinkAction'
+import router from '@/router'
+
+const executeAction = (payload: SideBarLinkAction) => {
+  console.log('Clicked a side bar link', payload)
+
+  if (payload.action === SideBarActionsEnum.Logout) {
+    console.log('Logging out...')
+    useAuthStore().logout()
+    router.push('/login')
+  }
+}
 
 const topLinks: LinkProp[] = [
   {
-    to: '/',
+    to: RouterPathEnum.Home,
     icon: 'lucide:house',
     label: 'Dashboard',
   },
-  { to: '/projects', icon: 'lucide:building-2', label: 'Projects' },
+  { to: RouterPathEnum.Projects, icon: 'lucide:building-2', label: 'Projects' },
   {
-    to: '/tasks',
+    to: RouterPathEnum.Tasks,
     icon: 'lucide:badge-check',
     label: 'Tasks',
   },
 ]
 const settingsLinks: LinkProp[] = [
   {
-    to: '/profile',
+    to: RouterPathEnum.Profile,
     icon: 'lucide:user',
     label: 'Profile',
   },
-  { to: '/settings', icon: 'lucide:settings', label: 'Settings' },
+  { to: RouterPathEnum.Settings, icon: 'lucide:settings', label: 'Settings' },
   {
     icon: 'lucide:log-out',
+    action: SideBarActionsEnum.Logout,
     label: 'Sign out',
   },
 ]

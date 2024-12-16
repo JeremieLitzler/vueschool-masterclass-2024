@@ -27,7 +27,7 @@ export const useErrorStore = defineStore('error-store', () => {
     const errorIsString = typeof error === 'string'
     if (errorIsString) isCustomError.value = true
     if (errorIsString || error instanceof Error) {
-      console.log('Received a string error')
+      console.log('Received a string error', error)
       activeError.value = errorIsString ? Error(error) : error
       activeError.value.customCode = customCode || 500
       if (nextPage) activeError.value.nextPage = nextPage

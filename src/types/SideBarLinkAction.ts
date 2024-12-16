@@ -1,8 +1,5 @@
 import type { SideBarActionsEnum } from './SideBarActionsEnum'
 
-export interface LinkProp {
-  to?: string
+export interface SideBarLinkAction {
   action?: SideBarActionsEnum
-  icon: string
-  label: string
 }
