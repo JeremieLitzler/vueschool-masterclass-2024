@@ -74,4 +74,4 @@ export const profilesByIdsQuery = async (ids: string[]) => {
     .in('id', ids)
   return result
 }
-export type ProfilesByIds = QueryData<ReturnType<typeof profilesByIdsQuery>>
+export type Collabs = QueryData<ReturnType<typeof profilesByIdsQuery>>

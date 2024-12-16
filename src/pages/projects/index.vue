@@ -18,8 +18,8 @@ const { projects } = storeToRefs(projectStore)
 // the projects are loaded
 await useProjectStore().getProjects()
 
-const { getProfilesByIds } = useCollabs()
-// await getProfilesByIds()
+const { getGroupedCollabs } = useCollabs()
+await getGroupedCollabs(projects.value)
 </script>
 
 <style scoped></style>
