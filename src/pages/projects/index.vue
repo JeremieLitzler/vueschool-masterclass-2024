@@ -10,11 +10,16 @@ usePageStore().pageData.title = 'Projects'
 import { useProjectStore } from '@/stores/project'
 import { columns } from '@/utils/datatable-columns-project'
 import type { AllProjects } from '@/utils/supabase-queries'
-const projects = ref<AllProjects | null>(null)
-const getProjects = async () => {
-  projects.value = await useProjectStore().getProjects()
-}
-await getProjects()
+
+const projectStore = useProjectStore()
+const { projects } = storeToRefs(projectStore)
+// projects is reactive from the project store.
+// as soon as the getProjects is called and done,
+// the projects are loaded
+await useProjectStore().getProjects()
+
+const { getProfilesByIds } = useCollabs()
+// await getProfilesByIds()
 </script>
 
 <style scoped></style>

@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import type { RegistrationData } from '@/types/RegistrationData'
 import type { QueryData, User } from '@supabase/supabase-js'
+import { asyncComputed } from '@vueuse/core'
 
 export const allProjectsQuery = supabase.from('projects').select()
 export type AllProjects = QueryData<typeof allProjectsQuery>
@@ -65,3 +66,12 @@ export const userProfileQuery = async ({ column, value }: { column: string; valu
   return result
 }
 export type UserProfile = QueryData<ReturnType<typeof userProfileQuery>>
+
+export const profilesByIdsQuery = async (ids: string[]) => {
+  const result = await supabase
+    .from('profiles')
+    .select('username, avatar_url, id, full_name')
+    .in('id', ids)
+  return result
+}
+export type ProfilesByIds = QueryData<ReturnType<typeof profilesByIdsQuery>>
