@@ -60,8 +60,8 @@ export const insertUserProfileQuery = async ({
   return result
 }
 
-export const userProfileQuery = async ({ userId }: { userId: undefined | string }) => {
-  const result = await supabase.from('profiles').select().eq('id', userId!).single()
+export const userProfileQuery = async ({ column, value }: { column: string; value: string }) => {
+  const result = await supabase.from('profiles').select().eq(column, value).single()
   return result
 }
 export type UserProfile = QueryData<ReturnType<typeof userProfileQuery>>

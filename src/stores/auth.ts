@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabaseClient'
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
-  const profile = ref<null | Tables<'profiles'> | any>(null)
+  const profile = ref<null | Tables<'profiles'>>(null)
   const isTrackingAuthChanges = ref(false)
 
   const setAuth = async ({
@@ -33,20 +33,20 @@ export const useAuthStore = defineStore('auth-store', () => {
       profile.value = null
       return
     }
-    if (profile.value) {
-      // profile already fetched
-      return null
-    }
-    if (profile.value && profile.value.id === user.value?.id) {
-      // profile is matching the user
-      return null
-    }
 
-    // otherwise let's fetch the profile
-    const { data, error, status } = await userProfileQuery({ userId: user.value?.id })
+    if (!profile.value || profile.value.id !== user.value?.id) {
+      // otherwise let's fetch the profile
+      const { data, error, status } = await userProfileQuery({
+        column: 'id',
+        value: user.value?.id,
+      })
 
-    if (error) useErrorStore().setError({ error, nextPage: nextPageOnError })
-    profile.value = data
+      if (error) {
+        useErrorStore().setError({ error, nextPage: nextPageOnError })
+      }
+
+      profile.value = data || null
+    }
   }
 
   const getSession = async () => {
