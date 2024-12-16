@@ -4,7 +4,10 @@ const props = defineProps<{
   customCode: number
   statusCode: number
   isCustomError: boolean
+  nextPage?: string
 }>()
+
+console.log({ ...props })
 
 const error = ref({
   code: 500,
@@ -12,8 +15,10 @@ const error = ref({
 })
 
 if (props.isCustomError) {
-  error.value.code = props.customCode
+  error.value.code = props.customCode || props.statusCode
   error.value.msg = props.message
+} else {
+  console.log('not custom error')
 }
 
 if (props.statusCode === 406) {
@@ -25,14 +30,19 @@ if (props.statusCode === 406) {
 <template>
   <div>
     <iconify-icon icon="lucide:triangle-alert" class="error__icon" />
-    <h1 class="error__code">{{ error.code }}</h1>
+    <h1 v-if="error.code > 0" class="error__code">{{ error.code }}</h1>
 
     <p class="error__msg">{{ error.msg }}</p>
 
     <div class="error-footer">
-      <p class="error-footer__text">You'll find lots to explore on the home page.</p>
-      <RouterLink to="/">
+      <p v-if="!props.nextPage" class="error-footer__text">
+        You'll find lots to explore on the home page.
+      </p>
+      <RouterLink v-if="!props.nextPage" to="/">
         <Button class="max-w-36"> Back to homepage </Button>
+      </RouterLink>
+      <RouterLink v-else :to="props.nextPage">
+        <Button class="max-w-36"> Back </Button>
       </RouterLink>
     </div>
   </div>

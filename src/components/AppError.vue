@@ -4,6 +4,7 @@ const router = useRouter()
 const { activeError, isCustomError } = useErrorStore()
 
 const error = ref(activeError)
+console.log('AppError', { ...activeError })
 
 const message = ref('')
 const customCode = ref(0)
@@ -31,7 +32,11 @@ if (error.value && 'details' in error.value) {
 if (error.value && 'statusCode' in error.value) {
   statusCode.value = error.value.statusCode ?? 0
 }
+if (error.value && 'status' in error.value) {
+  statusCode.value = error.value.status ?? 0
+}
 if (error.value && 'nextPage' in error.value) {
+  console.log('nextPage = ', error.value.nextPage)
   nextPage.value = error.value.nextPage
 }
 

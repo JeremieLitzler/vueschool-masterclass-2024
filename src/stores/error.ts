@@ -55,9 +55,12 @@ export const useErrorStore = defineStore('error-store', () => {
     if (authError instanceof AuthApiError) {
       console.error('Got an AuthApiError')
     }
-    console.log('Received a PostgrestError error')
+    console.log('Received a auth error')
+    console.log(authError)
+
     activeError.value = authError
     activeError.value.nextPage = nextPage
+    isCustomError.value = true
   }
 
   const clearError = () => {

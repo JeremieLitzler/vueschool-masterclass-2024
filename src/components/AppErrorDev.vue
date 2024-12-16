@@ -14,8 +14,8 @@ defineProps<{
   <div>
     <iconify-icon icon="lucide:triangle-alert" class="error__icon" />
     <h1 class="error__code" v-if="statusCode">Status Code: {{ statusCode }}</h1>
-    <h2 class="error__msg">Custom code: {{ customCode || code }}</h2>
-    <p>Message: {{ message }}</p>
+    <h2 class="error__msg">{{ message }}</h2>
+    <p>Custom code: {{ customCode || code }}</p>
     <p v-if="hint">Hint: {{ hint }}</p>
     <p v-if="details">Details: {{ details }}</p>
     <div class="error-footer">
