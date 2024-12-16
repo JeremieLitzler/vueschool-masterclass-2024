@@ -16,7 +16,7 @@ const { projects } = storeToRefs(projectStore)
 // projects is reactive from the project store.
 // as soon as the getProjects is called and done,
 // the projects are loaded
-await useProjectStore().getProjects()
+useProjectStore().getProjects()
 
 const { groupedCollabs, getGroupedCollabs } = useCollabs()
 await getGroupedCollabs(projects.value)

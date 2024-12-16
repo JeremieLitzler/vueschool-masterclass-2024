@@ -4,6 +4,7 @@ import type { AllProjects } from './supabase-queries'
 import type { GroupedCollabs } from '@/types/GroupedCollabs'
 import Avatar from '@/components/ui/avatar/Avatar.vue'
 import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
+import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
 export const columns = (collabs: Ref<GroupedCollabs>): ColumnDef<AllProjects[0]>[] => [
   {
     accessorKey: 'name',
@@ -43,9 +44,13 @@ export const columns = (collabs: Ref<GroupedCollabs>): ColumnDef<AllProjects[0]>
       return h(
         'div',
         { class: 'text-left font-medium' },
-        collabs.value[row.original.id].map((collab) => {
-          return h(Avatar, () => h(AvatarImage, { src: collab.avatar_url || '' }))
-        }),
+        collabs.value[row.original.id]
+          ? collabs.value[row.original.id].map((collab) => {
+              return h(Avatar, () => h(AvatarImage, { src: collab.avatar_url || '' }))
+            })
+          : row.original.collaborators.map(() =>
+              h(Avatar, { class: 'animate-pulse' }, () => h(AvatarFallback)),
+            ),
       )
     },
   },
