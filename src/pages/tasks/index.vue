@@ -56,11 +56,9 @@ import { columns } from '@/utils/datatable-columns-task'
 import { tasksWithProjectQuery } from '@/utils/supabase-queries'
 import type { TasksWithProject } from '@/utils/supabase-queries'
 
-const tasks = ref<TasksWithProject | null>(null)
-const getTasks = async () => {
-  tasks.value = await useTaskStore().getTasks()
-}
-await getTasks()
+const taskStore = useTaskStore()
+const { tasks } = storeToRefs(taskStore)
+await useTaskStore().getTasks()
 </script>
 
 <style scoped></style>

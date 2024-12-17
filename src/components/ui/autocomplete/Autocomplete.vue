@@ -1,3 +1,7 @@
+<!-- Inspired by 
+      - https://www.armand-salle.fr/post/autocomplete-select-shadcn-ui/
+      - https://leonardomontini.dev/shadcn-autocomplete/
+-->
 <!-- <<script setup lang="ts">
 import { ref, watch } from 'vue'
 import { Command } from 'vue-command-palette' // To install

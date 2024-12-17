@@ -23,6 +23,10 @@ await projectStore.getProject(slug)
 const updateProject = () => {
   projectStore.updateProject()
 }
+
+// Collabs
+const { getProfilesByIds } = useCollabs()
+const collabs = project.value ? await getProfilesByIds(project.value?.collaborators) : []
 </script>
 
 <template>
@@ -30,13 +34,17 @@ const updateProject = () => {
     <TableRow>
       <TableHead> Name </TableHead>
       <TableCell>
-        <AppInputLiveEditText v-model="project.name" @@commit="updateProject" />
+        <AppInputLiveEditText type="text" v-model="project.name" @@commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        <AppInputLiveEditText v-model="project.description" @@commit="updateProject" />
+        <AppInputLiveEditText
+          type="textarea"
+          v-model="project.description"
+          @@commit="updateProject"
+        />
       </TableCell>
     </TableRow>
     <TableRow>
@@ -59,11 +67,18 @@ const updateProject = () => {
         <div class="flex">
           <Avatar
             class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="collab in project?.collaborators"
-            :key="collab"
+            v-for="collab in collabs"
+            :key="collab.id"
           >
-            <RouterLink class="w-full h-full flex items-center justify-center" to="">
-              <AvatarImage src="" alt="" />
+            <RouterLink
+              class="w-full h-full flex items-center justify-center"
+              :to="{ name: '/profiles/[username]', params: { username: collab.username } }"
+            >
+              <AvatarImage
+                :src="collab.avatar_url || ''"
+                :alt="collab.full_name"
+                :title="collab.full_name"
+              />
               <AvatarFallback> </AvatarFallback>
             </RouterLink>
           </Avatar>
@@ -86,14 +101,16 @@ const updateProject = () => {
           </TableHeader>
           <TableBody>
             <TableRow v-for="task in project.tasks" :key="task.id">
-              <TableCell
+              <TableCell class="p-0"
                 ><RouterLink
                   :to="`/tasks/${task.id}`"
-                  class="text-left underline hover:bg-muted block w-full font-medium"
+                  class="text-left underline hover:bg-muted block w-full font-medium p-4"
                   >{{ task.name }}</RouterLink
                 ></TableCell
               >
-              <TableCell> {{ task.status }} </TableCell>
+              <TableCell
+                ><AppInputLiveEditStatus v-model="task.status" :readonly="true"
+              /></TableCell>
               <TableCell> {{ task.due_date }} </TableCell>
             </TableRow>
           </TableBody>

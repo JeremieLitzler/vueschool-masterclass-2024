@@ -57,6 +57,11 @@ export const taskFromIdWithProjectQuery = (taskId: string) =>
     .single()
 export type TaskFromIdWithProject = QueryData<ReturnType<typeof taskFromIdWithProjectQuery>>
 
+export const updateTaskQuery = async (task: {}, id: number) => {
+  const result = await supabase.from('tasks').update(task).eq('id', id)
+  return result // {count, data, error, status}
+}
+
 export const insertUserProfileQuery = async ({
   user,
   formData,

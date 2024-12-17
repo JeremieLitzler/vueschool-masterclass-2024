@@ -2,34 +2,35 @@
 import { taskFromIdWithProjectQuery } from '@/utils/supabase-queries'
 import { type TaskFromIdWithProject } from '@/utils/supabase-queries'
 
-const route = useRoute('/tasks/[id]')
-const task = ref<TaskFromIdWithProject | null>(null)
-const getProject = async (taskId: string) => {
-  const { data, error, status } = await taskFromIdWithProjectQuery(taskId)
-  if (error) {
-    useErrorStore().setError({ error: error, customCode: status })
-  }
-  console.log(data)
+const { id } = useRoute('/tasks/[id]').params
+const taskStore = useTaskStore()
+const { task } = storeToRefs(taskStore)
 
-  task.value = data
-}
-await getProject(route.params.id)
 watch(
   () => task.value?.name,
   () => (usePageStore().pageData.title = `Task: ${task.value?.name || 'Not Task found'}`),
 )
+
+await taskStore.getTask(id)
+// Update logic
+const updateTask = () => {
+  taskStore.updateTask()
+}
 </script>
 
 <template>
-  <Table>
+  <!-- TODO > To use v-model on the cell, we need to check the project is truthy first -->
+  <Table v-if="task">
     <TableRow>
       <TableHead> Name </TableHead>
-      <TableCell> {{ task?.name }} </TableCell>
+      <TableCell>
+        <AppInputLiveEditText type="text" v-model="task.name" @@commit="updateTask" />
+      </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        {{ task?.description }}
+        <AppInputLiveEditText type="textarea" v-model="task.description" @@commit="updateTask" />
       </TableCell>
     </TableRow>
     <TableRow>
@@ -50,7 +51,7 @@ watch(
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
-      <TableCell>{{ task?.status }}</TableCell>
+      <TableCell><AppInputLiveEditStatus v-model="task.status" @@commit="updateTask" /></TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Collaborators </TableHead>

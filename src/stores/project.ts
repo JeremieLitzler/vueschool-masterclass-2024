@@ -51,21 +51,19 @@ export const useProjectStore = defineStore('project-store', () => {
     validateCache<typeof project, typeof projectWithTasksQuery, typeof loadProject, PostgrestError>(
       {
         key: slug,
+        filter: slug,
         loaderFn: loadProject,
         query: projectWithTasksQuery,
         reference: project,
       },
     )
   }
-
+  // TODO > conver to generic as task store use the same logic
   const updateProject = async () => {
     if (!project.value) return
 
     const { tasks, id, ...projectProps } = project.value
-    console.log('updateProject > updated_at', projectProps.updated_at)
-    console.log('updateProject > created_at', projectProps.created_at)
     projectProps.updated_at = toISOStringWithTimezone(new Date())
-    console.log('updateProject > updated_at', projectProps.updated_at)
     const { count, data, error, status } = await updateProjectQuery(projectProps, id)
     if (error) {
       useErrorStore().setError({ error, customCode: status })

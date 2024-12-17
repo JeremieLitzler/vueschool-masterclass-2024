@@ -18,12 +18,13 @@
 import type { Tables } from '@/types/database.types'
 import { userProfileQuery } from '@/utils/supabase-queries'
 
-usePageStore().pageData = { title: 'Profile' }
+usePageStore().pageData = { title: '' }
 
 const { username } = useRoute('/profiles/[username]').params
 
 const profile = ref<Tables<'profiles'> | null>(null)
 const getProfile = async () => {
+  profile.value = null
   const { data, error, status } = await userProfileQuery({ column: 'username', value: username })
   if (error) {
     useErrorStore().setError({ error, customCode: status })

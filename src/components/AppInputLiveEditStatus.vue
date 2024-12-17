@@ -16,8 +16,13 @@ const toggleValue = () => {
 <template>
   <div class="text-3xl cursor-pointer" @click="toggleValue">
     <Transition mode="out-in">
-      <iconify-icon v-if="status === 'completed'" icon="lucide-check" class="text-green-500" />
-      <iconify-icon v-else icon="lucide-dot" class="text-orange-500" />
+      <iconify-icon
+        v-if="status === 'completed'"
+        icon="lucide-circle-check"
+        class="text-green-500"
+        :title="status"
+      />
+      <iconify-icon v-else icon="lucide-circle-dashed" class="text-orange-500" :title="status" />
     </Transition>
   </div>
 </template>

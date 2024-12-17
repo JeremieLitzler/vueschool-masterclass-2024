@@ -18,10 +18,11 @@ export const validateCache = <
   reference,
   query,
   key,
+  filter,
   loaderFn,
 }: CacheValidation<Reference, Query, Loader>) => {
   if (reference.value) {
-    const finalQuery = typeof query === 'function' ? query(key) : query
+    const finalQuery = typeof query === 'function' ? query(filter) : query
     finalQuery.then(({ data, error }: { data: Reference; error: ErrorType }) => {
       if (JSON.stringify(reference.value) === JSON.stringify(data)) {
         return
