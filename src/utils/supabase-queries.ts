@@ -31,6 +31,12 @@ export const projectWithTasksQuery = (slug: string) =>
     .eq('slug', slug)
     .single()
 export type ProjectWithTasks = QueryData<ReturnType<typeof projectWithTasksQuery>>
+
+export const updateProject = async ({ column, value }: UpdateSupabaseEntityRequest) => {
+  const result = await supabase.from('projects').update({})
+  return result // {count, data, error, status}
+}
+
 export const taskFromIdWithProjectQuery = (taskId: string) =>
   supabase
     .from('tasks')

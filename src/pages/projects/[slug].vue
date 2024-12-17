@@ -18,6 +18,11 @@ watch(
 )
 
 await projectStore.getProject(slug)
+
+// Update logic
+const updateProject = (newValue: string | undefined) => {
+  console.log('updateProject', newValue)
+}
 </script>
 
 <template>
@@ -25,7 +30,7 @@ await projectStore.getProject(slug)
     <TableRow>
       <TableHead> Name </TableHead>
       <TableCell>
-        <AppInPlaceEditText v-model="project.name" />
+        <AppInPlaceEditText v-model="project.name" @@update="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>

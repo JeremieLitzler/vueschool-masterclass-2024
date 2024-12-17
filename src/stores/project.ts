@@ -1,5 +1,6 @@
 import type { CacheValidation } from '@/types/CacheValidation'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
+import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import { validateCache } from '@/utils/cache-validation'
 import { allProjectsQuery, projectWithTasksQuery } from '@/utils/supabase-queries'
 import type { AllProjects, ProjectWithTasks } from '@/utils/supabase-queries'
@@ -72,10 +73,13 @@ export const useProjectStore = defineStore('project-store', () => {
     )
   }
 
+  const updateProject = ({ column, value }: UpdateSupabaseEntityRequest) => {}
+
   return {
     project,
     projects,
     getProject,
     getProjects,
+    updateProject,
   }
 })
