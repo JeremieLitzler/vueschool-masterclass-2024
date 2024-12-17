@@ -19,7 +19,7 @@ const { projects } = storeToRefs(projectStore)
 await projectStore.getProjects()
 
 const { groupedCollabs, getGroupedCollabs } = useCollabs()
-getGroupedCollabs(projects.value)
+getGroupedCollabs(projects.value ?? [])
 
 const columnsWithCollabs = columns(groupedCollabs)
 </script>

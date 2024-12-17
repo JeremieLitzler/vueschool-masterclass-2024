@@ -1,26 +1,39 @@
+import type { CacheValidation } from '@/types/CacheValidation'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
+import { validateCache } from '@/utils/cache-validation'
 import { allProjectsQuery, projectWithTasksQuery } from '@/utils/supabase-queries'
 import type { AllProjects, ProjectWithTasks } from '@/utils/supabase-queries'
+import { type PostgrestError } from '@supabase/supabase-js'
 import { useMemoize } from '@vueuse/core'
 
 export const useProjectStore = defineStore('project-store', () => {
-  const projects = ref<AllProjects>([])
+  const projects = ref<AllProjects | null>()
   const project = ref<ProjectWithTasks | null>(null)
 
-  const validateProjectsCache = (cacheKey: string) => {
-    if (projects.value) {
-      allProjectsQuery.then(({ data, error }) => {
-        if (JSON.stringify(projects.value) === JSON.stringify(data)) {
-          return
-        } else {
-          loadProjects.delete(cacheKey)
-          if (!error && data) {
-            projects.value = data
-          }
-        }
-      })
-    }
-  }
+  // const validateCache = ({
+  //   reference,
+  //   query,
+  //   key,
+  //   loaderFn,
+  // }: CacheValidation<
+  //   typeof projects | typeof project,
+  //   typeof allProjectsQuery | typeof projectWithTasksQuery,
+  //   typeof loadProjects | typeof loadProject
+  // >) => {
+  //   if (reference.value) {
+  //     const finalQuery = typeof query === 'function' ? query(key) : query
+  //     finalQuery.then(({ data, error }) => {
+  //       if (JSON.stringify(reference.value) === JSON.stringify(data)) {
+  //         return
+  //       } else {
+  //         loaderFn.delete(key as string)
+  //         if (!error && data) {
+  //           reference.value = data
+  //         }
+  //       }
+  //     })
+  //   }
+  // }
 
   const loadProjects = useMemoize(async (key: string) => await allProjectsQuery)
   const getProjects = async () => {
@@ -31,20 +44,14 @@ export const useProjectStore = defineStore('project-store', () => {
     if (data) {
       projects.value = data
     }
-    validateProjectsCache(StoreCacheKey.AllProjects)
+    validateCache<typeof projects, typeof allProjectsQuery, typeof loadProjects, PostgrestError>({
+      key: StoreCacheKey.AllProjects,
+      loaderFn: loadProjects,
+      query: allProjectsQuery,
+      reference: projects,
+    })
   }
 
-  const validateProjectCache = (cacheKey: string) => {
-    if (projects.value) {
-      projectWithTasksQuery(cacheKey).then(({ data }) => {
-        if (JSON.stringify(project.value) === JSON.stringify(data)) {
-          return
-        } else {
-          loadProject.delete(cacheKey)
-        }
-      })
-    }
-  }
   const loadProject = useMemoize(async (slug: string) => await projectWithTasksQuery(slug))
   const getProject = async (slug: string) => {
     const { data, error, status } = await loadProject(slug)
@@ -53,7 +60,14 @@ export const useProjectStore = defineStore('project-store', () => {
     }
 
     project.value = data
-    validateProjectCache(slug)
+    validateCache<typeof project, typeof projectWithTasksQuery, typeof loadProject, PostgrestError>(
+      {
+        key: StoreCacheKey.AllProjects,
+        loaderFn: loadProject,
+        query: projectWithTasksQuery,
+        reference: project,
+      },
+    )
   }
 
   return {
@@ -63,7 +77,3 @@ export const useProjectStore = defineStore('project-store', () => {
     getProjects,
   }
 })
-
-if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(usePageStore, import.meta.hot))
-}
