@@ -1,6 +1,6 @@
 <!-- <<script setup lang="ts">
 import { ref, watch } from 'vue'
-import { Command } from 'vue-command-palette'
+import { Command } from 'vue-command-palette' // To install
 import { Skeleton } from '@/components/ui/skeleton'
 import { Check } from 'lucide-vue-next'
 import type { ComponentPropsAutocomplete } from '@/types/ComponentPropsAutocomplete'

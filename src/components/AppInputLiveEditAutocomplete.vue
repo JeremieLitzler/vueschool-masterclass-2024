@@ -11,11 +11,11 @@ defineEmits<{
   <!-- TODO > The keyboard controls doesn't work to select a value from the list -->
   <!-- TODO > The filter doesn't work -->
   <!-- TODO > The selection seems to work from the list, but not the emit of the proper value -->
-  <Autocomplete
+  <!-- <Autocomplete
     class="app-in-place-edit-input"
     :options="list"
     @@update:value="$emit('@update-value')"
-  />
+  /> -->
 </template>
 
 <style scoped>
