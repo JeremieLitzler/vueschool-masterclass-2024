@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <<script setup lang="ts">
 import { ref, watch } from 'vue'
 import { Command } from 'vue-command-palette'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -120,4 +120,4 @@ const handleSelectOption = (selectedOption: Option) => {
     </div>
   </Command>
 </template>
-<style lang="css" scoped></style>
+<style lang="css" scoped></style> -->
