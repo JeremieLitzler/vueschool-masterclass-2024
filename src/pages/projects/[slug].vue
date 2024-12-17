@@ -5,11 +5,19 @@
 const { slug } = useRoute('/projects/[slug]').params
 const projectStore = useProjectStore()
 const { project } = storeToRefs(projectStore)
-await projectStore.getProject(slug)
+
+// TODO > make sure to place the watch before the async method that load the data!
+// Otherwise, the watcher never gets called
 watch(
   () => project.value?.name,
-  () => (usePageStore().pageData.title = `Project: ${project.value?.name || 'Not project found'}`),
+  () => {
+    console.log('watch project', project.value)
+
+    usePageStore().pageData.title = `Project: ${project.value?.name || 'Not project found'}`
+  },
 )
+
+await projectStore.getProject(slug)
 </script>
 
 <template>
