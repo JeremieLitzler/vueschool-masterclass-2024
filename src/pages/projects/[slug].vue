@@ -21,20 +21,22 @@ await projectStore.getProject(slug)
 </script>
 
 <template>
-  <Table>
+  <Table v-if="project">
     <TableRow>
       <TableHead> Name </TableHead>
-      <TableCell> {{ project?.name }} </TableCell>
+      <TableCell>
+        <AppInPlaceEditText v-model="project.name" />
+      </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        {{ project?.description || 'No description yet.' }}
+        {{ project.description || 'No description yet.' }}
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
-      <TableCell>{{ project?.status }}</TableCell>
+      <TableCell>{{ project.status }}</TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Collaborators </TableHead>
