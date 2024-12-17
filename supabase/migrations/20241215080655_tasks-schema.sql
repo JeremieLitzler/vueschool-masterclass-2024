@@ -4,6 +4,7 @@ create table
   tasks (
     id bigint primary key generated always as identity not null,
     created_at timestamptz default now() not null,
+    updated_at timestamptz null,
     name text not null,
     status current_status default 'in-progress' not null,
     description text not null,

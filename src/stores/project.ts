@@ -3,6 +3,7 @@ import type { Tables } from '@/types/database.types'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
 import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import { validateCache } from '@/utils/cache-validation'
+import { toISOStringWithTimezone } from '@/utils/date-format'
 import {
   allProjectsQuery,
   projectWithTasksQuery,
@@ -61,6 +62,10 @@ export const useProjectStore = defineStore('project-store', () => {
     if (!project.value) return
 
     const { tasks, id, ...projectProps } = project.value
+    console.log('updateProject > updated_at', projectProps.updated_at)
+    console.log('updateProject > created_at', projectProps.created_at)
+    projectProps.updated_at = toISOStringWithTimezone(new Date())
+    console.log('updateProject > updated_at', projectProps.updated_at)
     const { count, data, error, status } = await updateProjectQuery(projectProps, id)
     if (error) {
       useErrorStore().setError({ error, customCode: status })

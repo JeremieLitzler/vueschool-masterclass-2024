@@ -5,7 +5,10 @@ import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRe
 import type { QueryData, User } from '@supabase/supabase-js'
 import { asyncComputed } from '@vueuse/core'
 
-export const allProjectsQuery = supabase.from('projects').select()
+export const allProjectsQuery = supabase
+  .from('projects')
+  .select()
+  .order('updated_at', { ascending: false, nullsFirst: false })
 export type AllProjects = QueryData<typeof allProjectsQuery>
 
 export const tasksWithProjectQuery = supabase.from('tasks').select(`

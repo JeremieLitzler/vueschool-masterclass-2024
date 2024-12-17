@@ -5,6 +5,7 @@ create table
   profiles (
     id uuid references auth.users on delete cascade not null,
     created_at timestamptz default now() not null,
+    updated_at timestamptz null,
     username text unique not null,
     full_name text not null,
     bio text default null,

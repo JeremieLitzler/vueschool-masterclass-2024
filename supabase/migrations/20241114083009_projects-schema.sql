@@ -7,6 +7,7 @@ create table
   projects(
     id bigint primary key generated always as identity not null,
     created_at timestamptz default now() not null,
+    updated_at timestamptz null,
     name text unique not null,
     description text null,
     slug text unique not null,

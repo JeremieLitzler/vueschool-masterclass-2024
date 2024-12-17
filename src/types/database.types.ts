@@ -17,6 +17,7 @@ export type Database = {
           full_name: string
           id: string
           mode: string
+          updated_at: string | null
           username: string
         }
         Insert: {
@@ -26,6 +27,7 @@ export type Database = {
           full_name: string
           id: string
           mode?: string
+          updated_at?: string | null
           username: string
         }
         Update: {
@@ -35,6 +37,7 @@ export type Database = {
           full_name?: string
           id?: string
           mode?: string
+          updated_at?: string | null
           username?: string
         }
         Relationships: []
@@ -48,6 +51,7 @@ export type Database = {
           name: string
           slug: string
           status: Database["public"]["Enums"]["current_status"]
+          updated_at: string | null
         }
         Insert: {
           collaborators?: string[]
@@ -57,6 +61,7 @@ export type Database = {
           name: string
           slug: string
           status?: Database["public"]["Enums"]["current_status"]
+          updated_at?: string | null
         }
         Update: {
           collaborators?: string[]
@@ -66,6 +71,7 @@ export type Database = {
           name?: string
           slug?: string
           status?: Database["public"]["Enums"]["current_status"]
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -80,6 +86,7 @@ export type Database = {
           profile_id: string
           project_id: number | null
           status: Database["public"]["Enums"]["current_status"]
+          updated_at: string | null
         }
         Insert: {
           collaborators?: string[]
@@ -91,6 +98,7 @@ export type Database = {
           profile_id: string
           project_id?: number | null
           status?: Database["public"]["Enums"]["current_status"]
+          updated_at?: string | null
         }
         Update: {
           collaborators?: string[]
@@ -102,6 +110,7 @@ export type Database = {
           profile_id?: string
           project_id?: number | null
           status?: Database["public"]["Enums"]["current_status"]
+          updated_at?: string | null
         }
         Relationships: [
           {
