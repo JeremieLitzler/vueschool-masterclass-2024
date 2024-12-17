@@ -62,7 +62,7 @@ export const useProjectStore = defineStore('project-store', () => {
     project.value = data
     validateCache<typeof project, typeof projectWithTasksQuery, typeof loadProject, PostgrestError>(
       {
-        key: StoreCacheKey.AllProjects,
+        key: slug,
         loaderFn: loadProject,
         query: projectWithTasksQuery,
         reference: project,
