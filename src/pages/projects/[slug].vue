@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import { projectWithTasksQuery } from '@/utils/supabase-queries'
-import type { ProjectWithTasks } from '@/utils/supabase-queries'
-
 /**
  * TODO: Passing the route path to useRoute solve the TypeScript error on accessing `slug` param
  */
-const route = useRoute('/projects/[slug]')
+const { slug } = useRoute('/projects/[slug]').params
 const projectStore = useProjectStore()
 const { project } = storeToRefs(projectStore)
-await projectStore.getProject(route.params.slug)
+await projectStore.getProject(slug)
 watch(
   () => project.value?.name,
   () => (usePageStore().pageData.title = `Project: ${project.value?.name || 'Not project found'}`),
