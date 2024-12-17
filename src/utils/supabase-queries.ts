@@ -1,5 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
+import type { Tables } from '@/types/database.types'
 import type { RegistrationData } from '@/types/RegistrationData'
+import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import type { QueryData, User } from '@supabase/supabase-js'
 import { asyncComputed } from '@vueuse/core'
 
@@ -32,8 +34,8 @@ export const projectWithTasksQuery = (slug: string) =>
     .single()
 export type ProjectWithTasks = QueryData<ReturnType<typeof projectWithTasksQuery>>
 
-export const updateProject = async ({ column, value }: UpdateSupabaseEntityRequest) => {
-  const result = await supabase.from('projects').update({})
+export const updateProjectQuery = async (project = {}, id: number) => {
+  const result = await supabase.from('projects').update(project).eq('id', id)
   return result // {count, data, error, status}
 }
 

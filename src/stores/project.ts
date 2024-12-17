@@ -1,8 +1,13 @@
 import type { CacheValidation } from '@/types/CacheValidation'
+import type { Tables } from '@/types/database.types'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
 import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import { validateCache } from '@/utils/cache-validation'
-import { allProjectsQuery, projectWithTasksQuery } from '@/utils/supabase-queries'
+import {
+  allProjectsQuery,
+  projectWithTasksQuery,
+  updateProjectQuery,
+} from '@/utils/supabase-queries'
 import type { AllProjects, ProjectWithTasks } from '@/utils/supabase-queries'
 import { type PostgrestError } from '@supabase/supabase-js'
 import { useMemoize } from '@vueuse/core'
@@ -10,31 +15,6 @@ import { useMemoize } from '@vueuse/core'
 export const useProjectStore = defineStore('project-store', () => {
   const projects = ref<AllProjects | null>()
   const project = ref<ProjectWithTasks | null>(null)
-
-  // const validateCache = ({
-  //   reference,
-  //   query,
-  //   key,
-  //   loaderFn,
-  // }: CacheValidation<
-  //   typeof projects | typeof project,
-  //   typeof allProjectsQuery | typeof projectWithTasksQuery,
-  //   typeof loadProjects | typeof loadProject
-  // >) => {
-  //   if (reference.value) {
-  //     const finalQuery = typeof query === 'function' ? query(key) : query
-  //     finalQuery.then(({ data, error }) => {
-  //       if (JSON.stringify(reference.value) === JSON.stringify(data)) {
-  //         return
-  //       } else {
-  //         loaderFn.delete(key as string)
-  //         if (!error && data) {
-  //           reference.value = data
-  //         }
-  //       }
-  //     })
-  //   }
-  // }
 
   const loadProjects = useMemoize(async (key: string) => await allProjectsQuery)
   const getProjects = async () => {
@@ -63,6 +43,10 @@ export const useProjectStore = defineStore('project-store', () => {
     }
 
     project.value = data
+    validateCacheProject(slug)
+  }
+
+  const validateCacheProject = (slug: string) => {
     validateCache<typeof project, typeof projectWithTasksQuery, typeof loadProject, PostgrestError>(
       {
         key: slug,
@@ -73,7 +57,19 @@ export const useProjectStore = defineStore('project-store', () => {
     )
   }
 
-  const updateProject = ({ column, value }: UpdateSupabaseEntityRequest) => {}
+  const updateProject = async () => {
+    if (!project.value) return
+
+    const { tasks, id, ...projectProps } = project.value
+    const { count, data, error, status } = await updateProjectQuery(projectProps, id)
+    if (error) {
+      useErrorStore().setError({ error, customCode: status })
+    }
+    if (count && count > 1) {
+      useErrorStore().setError({ error: Error('Many projects updated...'), customCode: 500 })
+    }
+    validateCacheProject(projectProps.slug)
+  }
 
   return {
     project,

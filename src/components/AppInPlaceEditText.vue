@@ -2,7 +2,7 @@
 // TODO > Be careful about the source value.
 // You can't use dual-binding (v-model) with optional chaining (object?.property)
 // See https://stackoverflow.com/questions/74450389/how-do-i-use-vue3-typescript-v-model-on-textfield-error-invalid-assignment/74450619#74450619
-const userInput = defineModel<string>()
+const userInput = defineModel<string | null>()
 
 const emits = defineEmits<{
   (event: '@update'): void

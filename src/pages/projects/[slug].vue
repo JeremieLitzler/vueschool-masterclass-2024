@@ -21,7 +21,7 @@ await projectStore.getProject(slug)
 
 // Update logic
 const updateProject = () => {
-  projectStore.updateProject({ project: Object.assign({}, project.value) })
+  projectStore.updateProject()
 }
 </script>
 
@@ -36,14 +36,22 @@ const updateProject = () => {
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        {{ project.description || 'No description yet.' }}
+        <AppInPlaceEditText v-model="project.description" @@update="updateProject" />
+      </TableCell>
+    </TableRow>
+    <TableRow>
+      <TableHead> Slug </TableHead>
+      <TableCell>
+        <AppInPlaceEditText v-model="project.slug" @@update="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
+      <!-- TODO > need to pull the valid list from the Supabase type -->
       <TableCell>{{ project.status }}</TableCell>
     </TableRow>
     <TableRow>
+      <!-- TODO > need to pull the valid list of existing users -->
       <TableHead> Collaborators </TableHead>
       <TableCell>
         <div class="flex">
