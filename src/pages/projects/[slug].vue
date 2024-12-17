@@ -53,8 +53,9 @@ const statutes = ref([
     <TableRow>
       <TableHead> Status </TableHead>
       <!-- TODO > need to pull the valid list from the Supabase type -->
-      <!-- <TableCell>{{ project.status }}</TableCell> -->
-      <AppInputLiveEditStatus v-model="project.status" @@update-value="updateProject" />
+      <TableCell>
+        <AppInputLiveEditStatus v-model="project.status" @@update-value="updateProject" />
+      </TableCell>
     </TableRow>
     <TableRow>
       <!-- TODO > need to pull the valid list of existing users -->
