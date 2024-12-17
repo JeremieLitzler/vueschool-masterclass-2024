@@ -4,7 +4,7 @@ const { list } = defineProps<{
 }>()
 
 defineEmits<{
-  (event: '@update-value'): void
+  (event: '@commit-value'): void
 }>()
 </script>
 <template>
@@ -14,7 +14,7 @@ defineEmits<{
   <!-- <Autocomplete
     class="app-in-place-edit-input"
     :options="list"
-    @@update:value="$emit('@update-value')"
+    @@commit:value="$emit('@commit-value')"
   /> -->
 </template>
 

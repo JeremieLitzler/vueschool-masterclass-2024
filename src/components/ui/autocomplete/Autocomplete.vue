@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<ComponentPropsAutocomplete>(), {
 })
 
 const emit = defineEmits<{
-  (e: '@update:value', value: Option): void
+  (e: '@commit:value', value: Option): void
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -40,7 +40,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
     const optionToSelect = props.options.find((option) => option.label === input.value)
     if (optionToSelect) {
       selected.value = optionToSelect
-      emit('@update:value', optionToSelect)
+      emit('@commit:value', optionToSelect)
     }
   }
 
@@ -57,7 +57,7 @@ const handleBlur = () => {
 const handleSelectOption = (selectedOption: Option) => {
   inputValue.value = selectedOption.label
   selected.value = selectedOption
-  emit('@update:value', selectedOption)
+  emit('@commit:value', selectedOption)
 
   setTimeout(() => {
     if (inputRef.value instanceof HTMLInputElement) {
@@ -72,7 +72,7 @@ const handleSelectOption = (selectedOption: Option) => {
     <Command.Input
       ref="inputRef"
       :value="inputValue"
-      @update:value="props.isLoading ? undefined : ($event: string) => (inputValue = $event)"
+      @commit:value="props.isLoading ? undefined : ($event: string) => (inputValue = $event)"
       @blur="handleBlur"
       @focus="() => (isOpen = true)"
       :placeholder="placeholder"

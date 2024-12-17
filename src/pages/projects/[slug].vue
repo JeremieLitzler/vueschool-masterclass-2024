@@ -23,11 +23,6 @@ await projectStore.getProject(slug)
 const updateProject = () => {
   projectStore.updateProject()
 }
-
-const statutes = ref([
-  { value: 'in-progress', label: 'In Progress' },
-  { value: 'completed', label: 'Completed' },
-])
 </script>
 
 <template>
@@ -35,13 +30,13 @@ const statutes = ref([
     <TableRow>
       <TableHead> Name </TableHead>
       <TableCell>
-        <AppInputLiveEditText v-model="project.name" @@update="updateProject" />
+        <AppInputLiveEditText v-model="project.name" @@commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        <AppInputLiveEditText v-model="project.description" @@update="updateProject" />
+        <AppInputLiveEditText v-model="project.description" @@commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
@@ -54,7 +49,7 @@ const statutes = ref([
       <TableHead> Status </TableHead>
       <!-- TODO > need to pull the valid list from the Supabase type -->
       <TableCell>
-        <AppInputLiveEditStatus v-model="project.status" @@update-value="updateProject" />
+        <AppInputLiveEditStatus v-model="project.status" @@commit="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>

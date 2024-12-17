@@ -5,11 +5,11 @@
 const userInput = defineModel<string | null>()
 
 const emits = defineEmits<{
-  (event: '@update'): void
+  (event: '@commit'): void
 }>()
 
 const update = () => {
-  emits('@update')
+  emits('@commit')
 }
 // const props = defineProps<{
 //   type: string
