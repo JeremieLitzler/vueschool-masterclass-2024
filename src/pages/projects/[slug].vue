@@ -20,8 +20,8 @@ watch(
 await projectStore.getProject(slug)
 
 // Update logic
-const updateProject = (newValue: string | undefined) => {
-  console.log('updateProject', newValue)
+const updateProject = () => {
+  projectStore.updateProject({ project: Object.assign({}, project.value) })
 }
 </script>
 
