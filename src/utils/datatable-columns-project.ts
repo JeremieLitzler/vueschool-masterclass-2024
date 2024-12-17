@@ -36,7 +36,7 @@ export const columns = (collabs: Ref<GroupedCollabs>): ColumnDef<AllProjects[0]>
     accessorKey: 'status',
     header: () => h('div', { class: 'text-left' }, 'Status'),
     cell: ({ row }) => {
-      return h(AppInputLiveEditStatus, { modelValue: row.original.status })
+      return h(AppInputLiveEditStatus, { modelValue: row.original.status, readonly: true })
     },
   },
   {
