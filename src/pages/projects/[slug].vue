@@ -23,6 +23,11 @@ await projectStore.getProject(slug)
 const updateProject = () => {
   projectStore.updateProject()
 }
+
+const statutes = ref([
+  { value: 'in-progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+])
 </script>
 
 <template>
@@ -30,25 +35,26 @@ const updateProject = () => {
     <TableRow>
       <TableHead> Name </TableHead>
       <TableCell>
-        <AppInPlaceEditText v-model="project.name" @@update="updateProject" />
+        <AppInputLiveEditText v-model="project.name" @@update="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Description </TableHead>
       <TableCell>
-        <AppInPlaceEditText v-model="project.description" @@update="updateProject" />
+        <AppInputLiveEditText v-model="project.description" @@update="updateProject" />
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Slug </TableHead>
       <TableCell>
-        <AppInPlaceEditText v-model="project.slug" @@update="updateProject" />
+        {{ project.slug }}
       </TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
       <!-- TODO > need to pull the valid list from the Supabase type -->
-      <TableCell>{{ project.status }}</TableCell>
+      <!-- <TableCell>{{ project.status }}</TableCell> -->
+      <AppInputLiveEditStatus v-model="project.status" @@update-value="updateProject" />
     </TableRow>
     <TableRow>
       <!-- TODO > need to pull the valid list of existing users -->

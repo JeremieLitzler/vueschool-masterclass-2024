@@ -7,6 +7,9 @@
 export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
+  const RouterPathEnum: typeof import('./src/types/RouterPathEnum')['RouterPathEnum']
+  const SideBarActionsEnum: typeof import('./src/types/SideBarActionsEnum')['SideBarActionsEnum']
+  const StoreCacheKey: typeof import('./src/types/StoreCacheKeys')['StoreCacheKey']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
@@ -86,4 +89,13 @@ declare global {
   // @ts-ignore
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { RouterPathEnum } from './src/types/RouterPathEnum'
+  import('./src/types/RouterPathEnum')
+  // @ts-ignore
+  export type { SideBarActionsEnum } from './src/types/SideBarActionsEnum'
+  import('./src/types/SideBarActionsEnum')
+  // @ts-ignore
+  export type { StoreCacheKey } from './src/types/StoreCacheKeys'
+  import('./src/types/StoreCacheKeys')
 }
