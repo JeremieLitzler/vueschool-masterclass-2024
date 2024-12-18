@@ -16,6 +16,10 @@ await taskStore.getTask(id)
 const updateTask = () => {
   taskStore.updateTask()
 }
+
+//Collabs details
+const { getProfilesByIds } = useCollabs()
+const collabs = task.value ? await getProfilesByIds(task.value?.collaborators) : []
 </script>
 
 <template>
@@ -59,11 +63,18 @@ const updateTask = () => {
         <div class="flex">
           <Avatar
             class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="collab in task?.collaborators"
-            :key="collab"
+            v-for="collab in collabs"
+            :key="collab.id"
           >
-            <RouterLink class="w-full h-full flex items-center justify-center" to="">
-              <AvatarImage src="" alt="" />
+            <RouterLink
+              class="w-full h-full flex items-center justify-center focus:scale-110 transition-transform"
+              :to="{ name: `/profiles/[username]`, params: { username: collab.username } }"
+            >
+              <AvatarImage
+                :src="collab.avatar_url || ''"
+                :alt="collab.full_name"
+                :title="collab.full_name"
+              />
               <AvatarFallback> </AvatarFallback>
             </RouterLink>
           </Avatar>

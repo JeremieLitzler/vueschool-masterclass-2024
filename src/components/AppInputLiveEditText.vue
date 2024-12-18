@@ -3,9 +3,7 @@
 // You can't use dual-binding (v-model) with optional chaining (object?.property)
 // See https://stackoverflow.com/questions/74450389/how-do-i-use-vue3-typescript-v-model-on-textfield-error-invalid-assignment/74450619#74450619
 const userInput = defineModel<string | null>()
-const { type } = withDefaults(defineProps<{ type: string }>(), {
-  type: 'text',
-})
+const { type = 'text' } = defineProps<{ type: string }>()
 const emits = defineEmits<{
   (event: '@commit'): void
   (event: 'blur'): void
@@ -87,6 +85,6 @@ const stopEditing = () => {
 }
 
 .live-textarea {
-  @apply w-full text-slate-600 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded px-3.5 py-2.5 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100;
+  @apply w-full text-slate-600 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded px-3.5 py-2.5 outline-none focus:bg-white;
 }
 </style>

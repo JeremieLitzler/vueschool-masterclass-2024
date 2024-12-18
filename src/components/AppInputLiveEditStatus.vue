@@ -14,7 +14,7 @@ const toggleValue = () => {
 }
 </script>
 <template>
-  <div class="text-3xl cursor-pointer" @click="toggleValue">
+  <div class="text-3xl cursor-pointer" @click="toggleValue" @keyup.enter="toggleValue" tabindex="0">
     <Transition mode="out-in">
       <iconify-icon
         v-if="status === 'completed'"
