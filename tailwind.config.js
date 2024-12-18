@@ -11,6 +11,7 @@ export default {
     './components/**/*.{ts,tsx,vue}',
     './app/**/*.{ts,tsx,vue}',
     './src/**/*.{ts,tsx,vue}',
+    './formktit.theme.ts',
   ],
 
   theme: {
