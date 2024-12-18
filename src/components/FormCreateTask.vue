@@ -19,7 +19,6 @@ const setProjectsOptions = async () => {
     selectOptions.value.projects.push({ label: project.name, value: project.id })
   })
 }
-await setProjectsOptions()
 
 const profileStore = useProfileStore()
 const { profiles } = storeToRefs(profileStore)
@@ -32,7 +31,8 @@ const setProfilesOptions = async () => {
     selectOptions.value.profiles.push({ label: profile.full_name, value: profile.id })
   })
 }
-await setProfilesOptions()
+
+await Promise.all([setProjectsOptions(), setProfilesOptions()])
 
 const createTask = async (formData: FormDataCreateTask) => {
   await new Promise((resolve) => {
