@@ -10,14 +10,23 @@
     <DropdownMenu>
       <DropdownMenuTrigger>
         <Avatar>
-          <AvatarImage src="https://github.com/radix-vue.png" alt="@radix-vue" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage
+            :src="profile?.avatar_url || ''"
+            :alt="`Avatar of ${profile?.full_name}`"
+            :title="profile?.full_name"
+          />
+          <AvatarFallback>U</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem
+          ><RouterLink
+            :to="{ name: '/profiles/[username]', params: { username: profile?.username! } }"
+            >Profile</RouterLink
+          ></DropdownMenuItem
+        >
         <DropdownMenuItem>Billing</DropdownMenuItem>
         <DropdownMenuItem>Team</DropdownMenuItem>
         <DropdownMenuItem>Subscription</DropdownMenuItem>
@@ -27,16 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import Input from '@/components/ui/input/Input.vue'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+const authStore = useAuthStore()
+const { profile } = storeToRefs(authStore)
 </script>
 
 <style scoped></style>

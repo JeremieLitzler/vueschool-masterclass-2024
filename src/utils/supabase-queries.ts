@@ -1,6 +1,7 @@
 import { supabase } from '@/lib/supabaseClient'
 import type { Tables } from '@/types/database.types'
 import type { RegistrationData } from '@/types/RegistrationData'
+import type { RequestProfile } from '@/types/RequestProfile'
 import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import type { QueryData, User } from '@supabase/supabase-js'
 import { asyncComputed } from '@vueuse/core'
@@ -77,7 +78,7 @@ export const insertUserProfileQuery = async ({
   return result
 }
 
-export const userProfileQuery = async ({ column, value }: { column: string; value: string }) => {
+export const userProfileQuery = async ({ column, value }: RequestProfile) => {
   const result = await supabase.from('profiles').select().eq(column, value).single()
   return result
 }

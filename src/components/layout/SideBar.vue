@@ -3,13 +3,36 @@
     class="flex flex-col h-screen gap-2 border-r fixed bg-muted/40 lg:w-52 w-16 transition-[width]"
   >
     <div class="flex h-16 items-center border-b px-2 lg:px-4 shrink-0 gap-1 justify-between">
-      <Button variant="outline" size="icon" class="w-8 h-8">
+      <Button tabindex="0" variant="outline" size="icon" class="w-8 h-8">
         <iconify-icon icon="lucide:menu"></iconify-icon>
       </Button>
 
-      <Button variant="outline" size="icon" class="w-8 h-8">
-        <iconify-icon icon="lucide:plus"></iconify-icon>
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <Button
+            tabindex="0"
+            class="w-8 h-8 hover:ring-offset-2 hover:ring-2 focus:ring-offset-2 focus:ring-2"
+            variant="outline"
+            size="icon"
+          >
+            <iconify-icon icon="lucide:plus"></iconify-icon>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Create</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem class="cursor-pointer" @click="$emit('@createProject')">
+            A Project
+          </DropdownMenuItem>
+          <DropdownMenuItem class="cursor-pointer" @click="$emit('@createTask')">
+            A Task</DropdownMenuItem
+          >
+          <!-- <DropdownMenuItem
+            ><RouterLink to="/projects/create">A Project</RouterLink></DropdownMenuItem
+          >
+          <DropdownMenuItem><RouterLink to="/tasks/create">A Task</RouterLink></DropdownMenuItem> -->
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
 
     <nav class="flex flex-col gap-2 justify-between h-full relative">
@@ -44,6 +67,7 @@ const executeAction = async (payload: SideBarLinkAction) => {
   }
 }
 
+defineEmits<{ (event: '@createTask'): void; (event: '@createProject'): void }>()
 const { useAuthStore } = await import('@/stores/auth')
 const authStore = useAuthStore()
 await authStore.getSession()

@@ -5,14 +5,29 @@ import type { CacheValidation } from '@/types/CacheValidation'
  * since if the delete method changes, you'll need
  * update the WithUseMemoize interface
  */
-interface WithUseMemoize {
-  delete(key: string): void
+interface WithUseMemoize<Type = string> {
+  delete(key: Type): void
 }
-
+/**
+ * The method accept a CacheValidation instance expecting:
+ *  - a reference which type is the "typeof" of your Reactive Ref in your store
+ *  - a query which type is the "typeof" of your Supabase query
+ *  - a loader which type is the "typeof" of the useMemoize's implementation function
+ *  - a key which is the cache key for useMemoize
+ *  - a filter if the query need one. It supports string and object value for now
+ *
+ * The generic expects the following types:
+ *  - a reference type which is the "typeof" of your Reactive Ref in your store
+ *  - a query type which is the "typeof" of your Supabase query
+ *  - a loader type which is the "typeof" of the useMemoize's implementation function
+ *  - a error type which is the Supabase type error. It'll depend on what you call
+ *
+ * @param param0 The CacheValidation instance
+ */
 export const validateCache = <
   Reference extends Ref,
   Query,
-  Loader extends WithUseMemoize,
+  Loader extends WithUseMemoize<any>,
   ErrorType,
 >({
   reference,
