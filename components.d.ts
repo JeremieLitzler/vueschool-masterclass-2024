@@ -13,6 +13,7 @@ declare module 'vue' {
     AppInputLiveEditAutocomplete: typeof import('./src/components/AppInputLiveEditAutocomplete.vue')['default']
     AppInputLiveEditStatus: typeof import('./src/components/AppInputLiveEditStatus.vue')['default']
     AppInputLiveEditText: typeof import('./src/components/AppInputLiveEditText.vue')['default']
+    AppListCollaborators: typeof import('./src/components/AppListCollaborators.vue')['default']
     AuthLayout: typeof import('./src/components/layout/main/AuthLayout.vue')['default']
     Autocomplete: typeof import('./src/components/ui/autocomplete/Autocomplete.vue')['default']
     Avatar: typeof import('./src/components/ui/avatar/Avatar.vue')['default']

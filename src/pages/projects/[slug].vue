@@ -23,10 +23,6 @@ await projectStore.getProject(slug)
 const updateProject = () => {
   projectStore.updateProject()
 }
-
-// Collabs
-const { getProfilesByIds } = useCollabs()
-const collabs = project.value ? await getProfilesByIds(project.value?.collaborators) : []
 </script>
 
 <template>
@@ -64,25 +60,7 @@ const collabs = project.value ? await getProfilesByIds(project.value?.collaborat
       <!-- TODO > need to pull the valid list of existing users -->
       <TableHead> Collaborators </TableHead>
       <TableCell>
-        <div class="flex">
-          <Avatar
-            class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="collab in collabs"
-            :key="collab.id"
-          >
-            <RouterLink
-              class="w-full h-full flex items-center justify-center"
-              :to="{ name: '/profiles/[username]', params: { username: collab.username } }"
-            >
-              <AvatarImage
-                :src="collab.avatar_url || ''"
-                :alt="collab.full_name"
-                :title="collab.full_name"
-              />
-              <AvatarFallback> </AvatarFallback>
-            </RouterLink>
-          </Avatar>
-        </div>
+        <AppListCollaborators :collaborator-ids="project.collaborators" />
       </TableCell>
     </TableRow>
   </Table>
