@@ -1,11 +1,13 @@
 import type { CacheValidation } from '@/types/CacheValidation'
 import type { Tables } from '@/types/database.types'
+import type { FormDataCreateProject } from '@/types/FormDataCreateProject'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
 import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import { validateCache } from '@/utils/cache-validation'
 import { toISOStringWithTimezone } from '@/utils/date-format'
 import {
   allProjectsQuery,
+  createProjectQuery,
   projectWithTasksQuery,
   updateProjectQuery,
 } from '@/utils/supabase-queries'
@@ -17,6 +19,14 @@ export const useProjectStore = defineStore('project-store', () => {
   const projects = ref<AllProjects | null>()
   const project = ref<ProjectWithTasks | null>(null)
 
+  const validateCacheProjects = () =>
+    validateCache<typeof projects, typeof allProjectsQuery, typeof loadProjects, PostgrestError>({
+      key: StoreCacheKey.AllProjects,
+      loaderFn: loadProjects,
+      query: allProjectsQuery,
+      reference: projects,
+    })
+
   const loadProjects = useMemoize(async (key: string) => await allProjectsQuery)
   const getProjects = async () => {
     projects.value = null
@@ -27,12 +37,7 @@ export const useProjectStore = defineStore('project-store', () => {
     if (data) {
       projects.value = data
     }
-    validateCache<typeof projects, typeof allProjectsQuery, typeof loadProjects, PostgrestError>({
-      key: StoreCacheKey.AllProjects,
-      loaderFn: loadProjects,
-      query: allProjectsQuery,
-      reference: projects,
-    })
+    validateCacheProjects()
   }
 
   const loadProject = useMemoize(async (slug: string) => await projectWithTasksQuery(slug))
@@ -58,6 +63,15 @@ export const useProjectStore = defineStore('project-store', () => {
       },
     )
   }
+
+  const createProject = async (project: FormDataCreateProject) => {
+    const { error, status } = await createProjectQuery(project)
+    if (error) {
+      useErrorStore().setError({ error, customCode: status })
+    }
+    validateCacheProjects()
+  }
+
   // TODO > conver to generic as task store use the same logic
   const updateProject = async () => {
     if (!project.value) return
@@ -79,6 +93,7 @@ export const useProjectStore = defineStore('project-store', () => {
     projects,
     getProject,
     getProjects,
+    createProject,
     updateProject,
   }
 })

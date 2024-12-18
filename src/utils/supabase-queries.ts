@@ -1,24 +1,21 @@
 import { supabase } from '@/lib/supabaseClient'
-import type { Tables } from '@/types/database.types'
+import type { FormDataCreateProject } from '@/types/FormDataCreateProject'
+import type { FormDataCreateTask } from '@/types/FormDataCreateTask'
 import type { RegistrationData } from '@/types/RegistrationData'
 import type { RequestProfile } from '@/types/RequestProfile'
-import type { UpdateSupabaseEntityRequest } from '@/types/UpdateSupabaseEntityRequest'
 import type { QueryData, User } from '@supabase/supabase-js'
-import { asyncComputed } from '@vueuse/core'
+
+export const createProjectQuery = async (project: FormDataCreateProject) => {
+  return await supabase.from('projects').insert(project)
+}
 
 export const allProjectsQuery = supabase
   .from('projects')
   .select()
+  // TODO > about ordering with Supabase !
+  .order('created_at', { ascending: false, nullsFirst: false })
   .order('updated_at', { ascending: false, nullsFirst: false })
 export type AllProjects = QueryData<typeof allProjectsQuery>
-
-export const tasksWithProjectQuery = supabase.from('tasks').select(`
-    *, 
-    projects (
-      id, name, slug
-    )
-  `)
-export type TasksWithProject = QueryData<typeof tasksWithProjectQuery>
 
 export const projectWithTasksQuery = (slug: string) =>
   supabase
@@ -42,6 +39,26 @@ export const updateProjectQuery = async (project = {}, id: number) => {
   const result = await supabase.from('projects').update(project).eq('id', id)
   return result // {count, data, error, status}
 }
+
+export const createTaskQuery = async (task: FormDataCreateTask) => {
+  return await supabase.from('tasks').insert(task)
+}
+export const taskByIdQuery = (id: string) => supabase.from('tasks').select().eq('id', id)
+export type TaskSingle = QueryData<ReturnType<typeof taskByIdQuery>>
+
+export const tasksWithProjectQuery = supabase
+  .from('tasks')
+  .select(
+    `
+    *, 
+    projects (
+      id, name, slug
+    )
+  `,
+  )
+  .order('created_at', { ascending: false, nullsFirst: false })
+  .order('updated_at', { ascending: false, nullsFirst: false })
+export type TasksWithProject = QueryData<typeof tasksWithProjectQuery>
 
 export const taskFromIdWithProjectQuery = (taskId: string) =>
   supabase

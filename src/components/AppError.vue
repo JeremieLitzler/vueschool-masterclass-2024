@@ -40,6 +40,11 @@ if (error.value && 'nextPage' in error.value) {
   nextPage.value = error.value.nextPage
 }
 
+if (customCode.value === 401) {
+  await useAuthStore().logout()
+  message.value = "You're logged out. Click the button below to login again"
+}
+
 const ErrorTemplate = import.meta.env.DEV
   ? defineAsyncComponent(() => import('./AppErrorDev.vue'))
   : defineAsyncComponent(() => import('./AppErrorProd.vue'))

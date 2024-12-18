@@ -9,14 +9,7 @@
     </form>
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar>
-          <AvatarImage
-            :src="profile?.avatar_url || ''"
-            :alt="`Avatar of ${profile?.full_name}`"
-            :title="profile?.full_name"
-          />
-          <AvatarFallback>U</AvatarFallback>
-        </Avatar>
+        <AppAvatar :profile="profile" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My Account</DropdownMenuLabel>

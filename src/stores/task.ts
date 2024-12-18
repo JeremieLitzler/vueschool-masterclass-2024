@@ -1,8 +1,10 @@
 import type { Tables } from '@/types/database.types'
+import type { FormDataCreateTask } from '@/types/FormDataCreateTask'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
 import { validateCache } from '@/utils/cache-validation'
 import { toISOStringWithTimezone } from '@/utils/date-format'
 import {
+  createTaskQuery,
   taskFromIdWithProjectQuery,
   tasksWithProjectQuery,
   updateTaskQuery,
@@ -23,6 +25,10 @@ export const useTaskStore = defineStore('tasks-store', () => {
       useErrorStore().setError({ error, customCode: status })
     }
     tasks.value = data
+    validateCacheTasks()
+  }
+
+  const validateCacheTasks = async () => {
     validateCache<typeof tasks, typeof tasksWithProjectQuery, typeof loadTasks, PostgrestError>({
       key: StoreCacheKey.AllTasksWithProjects as string,
       reference: tasks,
@@ -30,7 +36,6 @@ export const useTaskStore = defineStore('tasks-store', () => {
       loaderFn: loadTasks,
     })
   }
-
   const validateCacheTask = (id: string) => {
     validateCache<typeof task, typeof taskFromIdWithProjectQuery, typeof loadTask, PostgrestError>({
       key: getTaskKey(id),
@@ -57,6 +62,14 @@ export const useTaskStore = defineStore('tasks-store', () => {
     validateCacheTask(id)
   }
 
+  const createTask = async (task: FormDataCreateTask) => {
+    const { error, status } = await createTaskQuery(task)
+    if (error) {
+      useErrorStore().setError({ error, customCode: status })
+    }
+    validateCacheTasks()
+  }
+
   const updateTask = async () => {
     if (!task.value) return
 
@@ -77,6 +90,7 @@ export const useTaskStore = defineStore('tasks-store', () => {
     tasks,
     getTask,
     getTasks,
+    createTask,
     updateTask,
   }
 })

@@ -18,7 +18,7 @@
     </template>
     <template #cell-status="{ cell }">
       <div class="text-left font-medium">
-        {{ cell.getValue() }}
+        <AppInputLiveEditStatus :v-model="cell.getValue() || ''" :readonly="true" />
       </div>
     </template>
     <template #cell-due_date="{ cell }">
@@ -44,7 +44,7 @@
     </template>
     <template #cell-collaborators="{ cell }">
       <div class="text-left font-medium">
-        {{ JSON.stringify(cell.getValue()) }}
+        <AppListCollaborators :collaborator-ids="cell.getValue() as string[]" />
       </div>
     </template>
   </DataTable>
@@ -55,10 +55,17 @@ usePageStore().pageData.title = 'Tasks'
 import { columns } from '@/utils/datatable-columns-task'
 import { tasksWithProjectQuery } from '@/utils/supabase-queries'
 import type { TasksWithProject } from '@/utils/supabase-queries'
+import { isAutoAccessorPropertyDeclaration } from 'typescript'
 
 const taskStore = useTaskStore()
 const { tasks } = storeToRefs(taskStore)
 await useTaskStore().getTasks()
+
+// TODO > computed or :v-model
+const taskStatus = computed<string>((status) => {
+  console.log('taskStatus>computed: ', status)
+  return status || ''
+})
 </script>
 
 <style scoped></style>

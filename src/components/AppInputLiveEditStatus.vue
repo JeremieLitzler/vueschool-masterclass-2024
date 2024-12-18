@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Database } from '@/types/database.types'
 
-const status = defineModel<Database['public']['Enums']['current_status']>()
+const status = defineModel<Database['public']['Enums']['current_status'] | string | undefined>()
 // TODO > From Vue 3.5, no need to use withDefaults to assign a default value to props
 const { readonly = false } = defineProps<{ readonly?: boolean }>()
 const emits = defineEmits<{

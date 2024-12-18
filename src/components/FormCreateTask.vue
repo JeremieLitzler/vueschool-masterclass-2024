@@ -8,8 +8,14 @@ const selectOptions = ref({
   profiles: [] as FormSelectOption[],
 })
 
+const authStore = useAuthStore()
+const { profile: currentUser } = storeToRefs(authStore)
 const projectStore = useProjectStore()
 const { projects } = storeToRefs(projectStore)
+const profileStore = useProfileStore()
+const { profiles } = storeToRefs(profileStore)
+const { createTask } = useTaskStore()
+
 const setProjectsOptions = async () => {
   await projectStore.getProjects()
 
@@ -20,8 +26,6 @@ const setProjectsOptions = async () => {
   })
 }
 
-const profileStore = useProfileStore()
-const { profiles } = storeToRefs(profileStore)
 const setProfilesOptions = async () => {
   await profileStore.getProfiles()
 
@@ -34,12 +38,13 @@ const setProfilesOptions = async () => {
 
 await Promise.all([setProjectsOptions(), setProfilesOptions()])
 
-const createTask = async (formData: FormDataCreateTask) => {
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(console.log(formData))
-    }, 2000)
-  })
+const submitNewTask = async (formData: FormDataCreateTask) => {
+  const task = { ...formData }
+  task.collaborators = [currentUser.value!.id]
+  console.log('submitNewTask', task)
+
+  await createTask(task)
+  sheetOpen.value = false
 }
 </script>
 <template>
@@ -48,24 +53,50 @@ const createTask = async (formData: FormDataCreateTask) => {
       <SheetHeader>
         <SheetTitle>Let's create a new task</SheetTitle>
       </SheetHeader>
-      <FormKit type="form" @submit="createTask" submit-label="Create">
-        <FormKit type="text" name="name" id="name" label="Name" />
-        <FormKit type="textarea" name="description" id="description" label="Description" />
+      <FormKit
+        type="form"
+        @submit="submitNewTask"
+        submit-label="Create"
+        :config="{ validationVisibility: 'submit' }"
+      >
         <FormKit
-          type="select"
-          name="assignee"
-          id="assignee"
-          label="Assignee"
-          placeholder="Select an Assignee"
-          :options="selectOptions.profiles"
+          type="text"
+          name="name"
+          id="name"
+          label="Name"
+          validation="required|lenght:3,255"
         />
         <FormKit
           type="select"
-          name="project"
-          id="project"
+          name="profile_id"
+          id="profile_id"
+          label="Assignee"
+          placeholder="Select an Assignee"
+          :options="selectOptions.profiles"
+          validation="required"
+        />
+        <FormKit
+          type="select"
+          name="project_id"
+          id="project_id"
           label="Project"
           placeholder="Select a Project"
           :options="selectOptions.projects"
+          validation="required"
+        />
+        <FormKit
+          type="date"
+          name="due_date"
+          id="due_date"
+          label="Due Date"
+          placeholder="Select Due Date"
+        />
+        <FormKit
+          type="textarea"
+          name="description"
+          id="description"
+          label="Description"
+          validation="0,500"
         />
       </FormKit>
     </SheetContent>

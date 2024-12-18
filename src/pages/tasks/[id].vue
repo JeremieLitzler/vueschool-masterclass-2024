@@ -3,8 +3,11 @@ import { taskFromIdWithProjectQuery } from '@/utils/supabase-queries'
 import { type TaskFromIdWithProject } from '@/utils/supabase-queries'
 
 const { id } = useRoute('/tasks/[id]').params
+
 const taskStore = useTaskStore()
 const { task } = storeToRefs(taskStore)
+const profileStore = useProfileStore()
+const { profile } = storeToRefs(profileStore)
 
 watch(
   () => task.value?.name,
@@ -12,6 +15,11 @@ watch(
 )
 
 await taskStore.getTask(id)
+if (task.value) {
+  console.log('getProfile>task.id', task.value.profile_id)
+
+  await profileStore.getProfile({ column: 'id', value: task.value.profile_id })
+}
 // Update logic
 const updateTask = () => {
   taskStore.updateTask()
@@ -35,7 +43,7 @@ const updateTask = () => {
     </TableRow>
     <TableRow>
       <TableHead> Assignee </TableHead>
-      <TableCell>No Assignee</TableCell>
+      <TableCell><AppAvatarLink :profile /></TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Project </TableHead>

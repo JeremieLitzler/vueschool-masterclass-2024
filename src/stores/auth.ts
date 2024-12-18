@@ -1,13 +1,13 @@
 import { type Session, type User } from '@supabase/supabase-js'
 import type { Tables } from '@/types/database.types'
-import { userProfileQuery } from '@/utils/supabase-queries'
+import { userProfileQuery, type UserProfile } from '@/utils/supabase-queries'
 import { logoutFromSupabase, retrieveCurrentSession } from '@/utils/supabase-auth'
 import { RouterPathEnum } from '@/types/RouterPathEnum'
 import { supabase } from '@/lib/supabaseClient'
 
 export const useAuthStore = defineStore('auth-store', () => {
   const user = ref<null | User>(null)
-  const profile = ref<null | Tables<'profiles'>>(null)
+  const profile = ref<null | UserProfile>(null)
   const isTrackingAuthChanges = ref(false)
 
   const setAuth = async ({

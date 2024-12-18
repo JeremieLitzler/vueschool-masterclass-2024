@@ -29,7 +29,9 @@ onErrorCaptured((error) => {
       </RouterView>
     </AuthLayout>
     <template #fallback>
-      <p>Loading...</p>
+      <div class="w-full h-full flex items-center justify-center">
+        <p class="text-4xl">Loading...</p>
+      </div>
     </template>
   </Suspense>
 </template>

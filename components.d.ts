@@ -7,6 +7,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AppAvatar: typeof import('./src/components/AppAvatar.vue')['default']
+    AppAvatarLink: typeof import('./src/components/AppAvatarLink.vue')['default']
     AppError: typeof import('./src/components/AppError.vue')['default']
     AppErrorDev: typeof import('./src/components/AppErrorDev.vue')['default']
     AppErrorProd: typeof import('./src/components/AppErrorProd.vue')['default']
