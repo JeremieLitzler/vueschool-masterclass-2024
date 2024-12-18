@@ -15,6 +15,8 @@ app.use(router)
 // formKit
 app.use(plugin, defaultConfig)
 
-app.config.errorHandler = (error) => console.error(error)
+app.config.errorHandler = (error) => {
+  console.error(error)
+}
 
 app.mount('#app')

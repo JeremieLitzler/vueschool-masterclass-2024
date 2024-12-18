@@ -50,14 +50,12 @@ export const useAuthStore = defineStore('auth-store', () => {
   }
 
   const getSession = async () => {
-    const { data, error } = await retrieveCurrentSession()
-    console.log('retrieveCurrentSession', error)
+    const { data, error: authError } = await retrieveCurrentSession()
+    console.log('getSession>error', authError)
+    console.log('getSession>data', data)
 
-    if (data?.session?.user) {
-      console.log('User session valid')
-      return { stillAuthenticated: true }
-    } else {
-      return { stillAuthenticated: false }
+    if (authError) {
+      useErrorStore().setAuthError({ authError, nextPage: RouterPathEnum.Login })
     }
   }
 

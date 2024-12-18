@@ -9,7 +9,10 @@ const emits = defineEmits<{
 }>()
 const toggleValue = () => {
   if (readonly) return
-  status.value = status.value === 'completed' ? 'in-progress' : 'completed'
+
+  if (status.value === 'completed') status.value = 'in-progress'
+  if (status.value === 'todo') status.value = 'in-progress'
+  if (status.value === 'in-progress') status.value = 'completed'
   emits('@commit')
 }
 </script>
@@ -17,7 +20,13 @@ const toggleValue = () => {
   <div class="text-3xl cursor-pointer" @click="toggleValue" @keyup.enter="toggleValue" tabindex="0">
     <Transition mode="out-in">
       <iconify-icon
-        v-if="status === 'completed'"
+        v-if="status === 'todo'"
+        icon="lucide-circle-dot"
+        class="text-gray-500"
+        :title="status"
+      />
+      <iconify-icon
+        v-else-if="status === 'completed'"
         icon="lucide-circle-check"
         class="text-green-500"
         :title="status"

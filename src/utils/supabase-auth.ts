@@ -72,4 +72,5 @@ export const retrieveCurrentSession = async () => {
   return { data }
 }
 
+export const reauthenticate = async (token: string) => await supabase.auth.reauthenticate()
 export const logoutFromSupabase = async () => await supabase.auth.signOut()

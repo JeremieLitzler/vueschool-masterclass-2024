@@ -137,7 +137,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      current_status: "in-progress" | "completed"
+      current_status: "todo" | "in-progress" | "completed"
     }
     CompositeTypes: {
       [_ in never]: never
