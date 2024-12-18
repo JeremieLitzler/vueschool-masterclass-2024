@@ -92,3 +92,9 @@ export const profilesByIdsQuery = async (ids: string[]) => {
   return result
 }
 export type Collabs = QueryData<ReturnType<typeof profilesByIdsQuery>>
+
+export const allProfilesQuery = supabase
+  .from('profiles')
+  .select()
+  .order('updated_at', { ascending: false, nullsFirst: false })
+export type AllProfiles = QueryData<typeof allProfilesQuery>

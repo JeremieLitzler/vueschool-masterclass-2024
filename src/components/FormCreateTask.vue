@@ -1,18 +1,38 @@
 <script setup lang="ts">
 import type { FormDataCreateTask } from '@/types/FormDataCreateTask'
-import { resolve } from 'path'
+import type { FormSelectOption } from '@/types/FormSelectOption'
 
 const sheetOpen = defineModel<boolean>()
-const formData = ref<FormDataCreateTask>({ name: '', description: '' })
-const possibleAssignees = ref([{ label: 'Toto', value: 1 }])
-const possibleProjects = ref([{ label: 'Toto', value: 1 }])
-// const projectStore = useProjectStore()
-// const {projects} = storeToRefs(projectStore)
-// const existingProjects: {label: string, value: string}[] = computed<{ label: string, value: number }>(() => {
-//   const possipleProjects = projects.value ? projects.value?.map(project => { label: project.name, value: project.id }) : []
-//   return possipleProjects
-// })
-// await projectStore.getProjects()
+const selectOptions = ref({
+  projects: [] as FormSelectOption[],
+  profiles: [] as FormSelectOption[],
+})
+
+const projectStore = useProjectStore()
+const { projects } = storeToRefs(projectStore)
+const setProjectsOptions = async () => {
+  await projectStore.getProjects()
+
+  if (!projects.value) return
+
+  projects.value.forEach((project) => {
+    selectOptions.value.projects.push({ label: project.name, value: project.id })
+  })
+}
+await setProjectsOptions()
+
+const profileStore = useProfileStore()
+const { profiles } = storeToRefs(profileStore)
+const setProfilesOptions = async () => {
+  await profileStore.getProfiles()
+
+  if (!profiles.value) return
+
+  profiles.value.forEach((profile) => {
+    selectOptions.value.profiles.push({ label: profile.full_name, value: profile.id })
+  })
+}
+await setProfilesOptions()
 
 const createTask = async (formData: FormDataCreateTask) => {
   await new Promise((resolve) => {
@@ -29,21 +49,15 @@ const createTask = async (formData: FormDataCreateTask) => {
         <SheetTitle>Let's create a new task</SheetTitle>
       </SheetHeader>
       <FormKit type="form" @submit="createTask" submit-label="Create">
-        <FormKit type="text" name="name" id="name" label="Name" v-model="formData.name" />
-        <FormKit
-          type="textarea"
-          name="description"
-          id="description"
-          label="Description"
-          v-model="formData.description"
-        />
+        <FormKit type="text" name="name" id="name" label="Name" />
+        <FormKit type="textarea" name="description" id="description" label="Description" />
         <FormKit
           type="select"
           name="assignee"
           id="assignee"
           label="Assignee"
           placeholder="Select an Assignee"
-          :options="possibleAssignees"
+          :options="selectOptions.profiles"
         />
         <FormKit
           type="select"
@@ -51,7 +65,7 @@ const createTask = async (formData: FormDataCreateTask) => {
           id="project"
           label="Project"
           placeholder="Select a Project"
-          :options="possibleProjects"
+          :options="selectOptions.projects"
         />
       </FormKit>
     </SheetContent>

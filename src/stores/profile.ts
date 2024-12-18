@@ -1,11 +1,34 @@
 import type { RequestProfile } from '@/types/RequestProfile'
 import { validateCache } from '@/utils/cache-validation'
-import { userProfileQuery, type UserProfile } from '@/utils/supabase-queries'
+import {
+  allProfilesQuery,
+  userProfileQuery,
+  type AllProfiles,
+  type UserProfile,
+} from '@/utils/supabase-queries'
 import type { PostgrestError } from '@supabase/supabase-js'
 import { useMemoize } from '@vueuse/core'
 
 export const useProfileStore = defineStore('profile-store', () => {
   const profile = ref<UserProfile | null>(null)
+  const profiles = ref<AllProfiles | null>(null)
+
+  const loadProfiles = useMemoize(async () => await allProfilesQuery)
+  const getProfiles = async () => {
+    profiles.value = null
+    const { data, error, status } = await loadProfiles()
+    if (error) {
+      useErrorStore().setError({ error, customCode: status })
+    }
+
+    profiles.value = data
+    validateCache<typeof profiles, typeof allProfilesQuery, typeof loadProfiles, PostgrestError>({
+      reference: profiles,
+      query: allProfilesQuery,
+      key: StoreCacheKey.AllProfiles,
+      loaderFn: loadProfiles,
+    })
+  }
 
   const getProfileKey = (request: RequestProfile) => `profile-${request.column}-${request.value}`
   const loadProfile = useMemoize(
@@ -30,6 +53,8 @@ export const useProfileStore = defineStore('profile-store', () => {
   }
   return {
     profile,
+    profiles,
     getProfile,
+    getProfiles,
   }
 })
