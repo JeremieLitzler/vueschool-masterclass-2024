@@ -3,8 +3,8 @@
     <SheetContent>
       <SheetHeader>
         <SheetTitle>Let's create a new task</SheetTitle>
-        Form inputs will go here
       </SheetHeader>
+      <FormKit type="text" />
     </SheetContent>
   </Sheet>
 </template>
