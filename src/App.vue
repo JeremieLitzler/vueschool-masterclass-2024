@@ -20,21 +20,25 @@ const GuestLayout = defineAsyncComponent(() => import('@/components/layout/Guest
   <Transition name="fade" mode="out-in">
     <div class="w-full">
       <Suspense>
-        <Component :is="user ? AuthLayout : GuestLayout">
+        <Component :is="user ? AuthLayout : GuestLayout" :key="user?.id">
           <AppError v-if="activeError" />
           <RouterView v-else v-slot="{ Component, route }">
-            <Suspense v-if="Component" :timeout="0">
-              <!-- With Suspence, the current component remains loaded until
-            the next is loaded.
-            
-            If it is not what you want, the "timeout" prop on Suspense tell to load 
-            the fallback until the next component is ready
-            -->
-              <Component :is="Component" :key="route.name" />
-              <template #fallback>
-                <AppLoader />
-              </template>
-            </Suspense>
+            <Transition name="fade" mode="out-in">
+              <div class="w-full" :key="route.path">
+                <Suspense v-if="Component" :timeout="0">
+                  <!-- With Suspence, the current component remains loaded until
+                  the next is loaded.
+                  
+                  If it is not what you want, the "timeout" prop on Suspense tell to load 
+                  the fallback until the next component is ready
+                  -->
+                  <Component :is="Component" />
+                  <template #fallback>
+                    <AppLoader />
+                  </template>
+                </Suspense>
+              </div>
+            </Transition>
           </RouterView>
         </Component>
         <template #fallback>
