@@ -7,6 +7,7 @@
 
     This is a great example.
   -->
+  <metainfo></metainfo>
   <DataTable v-if="tasks" :columns="columns" :data="tasks" :use-slot="true">
     <template #cell-name="{ cell }">
       <RouterLink
@@ -51,11 +52,10 @@
 </template>
 
 <script setup lang="ts">
-usePageStore().pageData.title = 'Tasks'
 import { columns } from '@/utils/datatable-columns-task'
-import { tasksWithProjectQuery } from '@/utils/supabase-queries'
-import type { TasksWithProject } from '@/utils/supabase-queries'
-import { isAutoAccessorPropertyDeclaration } from 'typescript'
+
+usePageStore().pageData.title = 'Tasks'
+useMeta({ title: 'All Tasks | Pulse' })
 
 const taskStore = useTaskStore()
 const { tasks } = storeToRefs(taskStore)

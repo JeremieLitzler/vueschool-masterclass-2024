@@ -14,9 +14,12 @@ onErrorCaptured((error) => {
 
 const AuthLayout = defineAsyncComponent(() => import('@/components/layout/AuthLayout.vue'))
 const GuestLayout = defineAsyncComponent(() => import('@/components/layout/GuestLayout.vue'))
+
+useMeta({ title: 'Homepage | Pulse' })
 </script>
 
 <template>
+  <metainfo></metainfo>
   <Transition name="fade" mode="out-in">
     <div class="w-full">
       <Suspense>

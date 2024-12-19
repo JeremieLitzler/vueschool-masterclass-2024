@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import router from '@/router'
-import { taskFromIdWithProjectQuery } from '@/utils/supabase-queries'
-import { type TaskFromIdWithProject } from '@/utils/supabase-queries'
 
 const { id } = useRoute('/tasks/[id]').params
 
@@ -12,7 +10,11 @@ const { profile } = storeToRefs(profileStore)
 
 watch(
   () => task.value?.name,
-  () => (usePageStore().pageData.title = `Task: ${task.value?.name || 'Not Task found'}`),
+  () => {
+    const pageTitle = `Task: ${task.value?.name || 'Not Task found'}`
+    usePageStore().pageData.title = pageTitle
+    // useMeta({ title: '' })
+  },
 )
 
 await taskStore.getTask(id)
@@ -38,6 +40,7 @@ const deleteTask = async () => {
 </script>
 
 <template>
+  <metainfo></metainfo>
   <!-- TODO > To use v-model on the cell, we need to check the project is truthy first -->
   <div class="flex flex-col justify-center items-center">
     <Button variant="destructive" class="self-end mt-3 w-full max-w-40" @click="deleteTask">

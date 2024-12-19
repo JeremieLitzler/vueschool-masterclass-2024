@@ -1,4 +1,5 @@
 <template>
+  <metainfo></metainfo>
   <div>
     <DataTable v-if="projects" :columns="columnsWithCollabs" :data="projects" />
   </div>
@@ -6,6 +7,7 @@
 
 <script setup lang="ts">
 usePageStore().pageData.title = 'Projects'
+useMeta({ title: 'All Projects | Pulse' })
 
 import { useProjectStore } from '@/stores/project'
 import { columns } from '@/utils/datatable-columns-project'
