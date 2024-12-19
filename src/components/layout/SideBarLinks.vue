@@ -4,14 +4,24 @@
       v-if="link.to"
       :to="link.to"
       exact-active-class="text-black bg-green-300"
-      class="side-bar-link"
+      class="side-bar-link mx-2"
+      :class="{ 'justify-normal': menuOpen, 'justify-center': !menuOpen }"
     >
       <iconify-icon :icon="link.icon"></iconify-icon>
-      <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
+      <span class="text-nowrap" :class="{ block: menuOpen, hidden: !menuOpen }">{{
+        link.label
+      }}</span>
     </RouterLink>
-    <button v-else class="side-bar-link cursor-pointer" @click="actionClicked(link.action)">
+    <button
+      v-else
+      class="side-bar-link cursor-pointer w-full mx-0"
+      :class="{ 'justify-normal': menuOpen, 'justify-center': !menuOpen }"
+      @click="actionClicked(link.action)"
+    >
       <iconify-icon :icon="link.icon"></iconify-icon>
-      <span class="hidden lg:block text-nowrap">{{ link.label }}</span>
+      <span class="text-nowrap" :class="{ block: menuOpen, hidden: !menuOpen }">{{
+        link.label
+      }}</span>
     </button>
   </template>
 </template>
@@ -30,10 +40,12 @@ const actionClicked = (action: SideBarActionsEnum | undefined) =>
 const { links } = defineProps<{
   links: LinkProp[]
 }>()
+
+const { menuOpen, toggleMenu } = useMenu()
 </script>
 <style lang="css" scoped>
 .side-bar-link {
-  @apply flex items-center gap-3 px-4 py-2 mx-2 transition-colors rounded-lg hover:text-primary justify-center lg:justify-normal text-muted-foreground;
+  @apply flex items-center gap-3 px-4 py-2 transition-colors rounded-lg hover:text-primary text-muted-foreground;
 }
 
 .router-link-active[aria-current='page'] {
