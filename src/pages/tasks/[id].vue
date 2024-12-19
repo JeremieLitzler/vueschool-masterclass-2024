@@ -13,6 +13,7 @@ watch(
   () => {
     const pageTitle = `Task: ${task.value?.name || 'Not Task found'}`
     usePageStore().pageData.title = pageTitle
+    // TODO > create issue with reproduction example: https://github.com/nuxt/vue-meta/issues/new?template=Blank+issue
     // useMeta({ title: '' })
   },
 )
