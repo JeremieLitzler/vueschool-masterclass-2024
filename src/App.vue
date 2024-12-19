@@ -1,17 +1,24 @@
 <script setup lang="ts">
+import { Component } from 'lucide-vue-next'
+
 const errorStore = useErrorStore()
 const { activeError } = storeToRefs(errorStore)
+const authStore = useAuthStore()
+const { user } = storeToRefs(authStore)
 onMounted(async () => {
-  useAuthStore().trackAuthChanges()
+  authStore.trackAuthChanges()
 })
 onErrorCaptured((error) => {
   errorStore.setError({ error })
 })
+
+const AuthLayout = defineAsyncComponent(() => import('@/components/layout/AuthLayout.vue'))
+const GuestLayout = defineAsyncComponent(() => import('@/components/layout/GuestLayout.vue'))
 </script>
 
 <template>
   <Suspense>
-    <AuthLayout>
+    <Component :is="user ? AuthLayout : GuestLayout">
       <AppError v-if="activeError" />
       <RouterView v-else v-slot="{ Component, route }">
         <Suspense v-if="Component" :timeout="0">
@@ -27,7 +34,7 @@ onErrorCaptured((error) => {
           </template>
         </Suspense>
       </RouterView>
-    </AuthLayout>
+    </Component>
     <template #fallback>
       <div class="w-full h-full flex items-center justify-center">
         <p class="text-4xl">Loading...</p>
