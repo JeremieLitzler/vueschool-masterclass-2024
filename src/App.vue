@@ -17,28 +17,41 @@ const GuestLayout = defineAsyncComponent(() => import('@/components/layout/Guest
 </script>
 
 <template>
-  <Suspense>
-    <Component :is="user ? AuthLayout : GuestLayout">
-      <AppError v-if="activeError" />
-      <RouterView v-else v-slot="{ Component, route }">
-        <Suspense v-if="Component" :timeout="0">
-          <!-- With Suspence, the current component remains loaded until
-          the next is loaded.
-
-             If it is not what you want, the "timeout" prop on Suspense tell to load 
-             the fallback until the next component is ready
-          -->
-          <Component :is="Component" :key="route.name" />
-          <template #fallback>
-            <p>Loading...</p>
-          </template>
-        </Suspense>
-      </RouterView>
-    </Component>
-    <template #fallback>
-      <div class="w-full h-full flex items-center justify-center">
-        <p class="text-4xl">Loading...</p>
-      </div>
-    </template>
-  </Suspense>
+  <Transition name="fade" mode="out-in">
+    <div class="w-full">
+      <Suspense>
+        <Component :is="user ? AuthLayout : GuestLayout">
+          <AppError v-if="activeError" />
+          <RouterView v-else v-slot="{ Component, route }">
+            <Suspense v-if="Component" :timeout="0">
+              <!-- With Suspence, the current component remains loaded until
+            the next is loaded.
+            
+            If it is not what you want, the "timeout" prop on Suspense tell to load 
+            the fallback until the next component is ready
+            -->
+              <Component :is="Component" :key="route.name" />
+              <template #fallback>
+                <AppLoader />
+              </template>
+            </Suspense>
+          </RouterView>
+        </Component>
+        <template #fallback>
+          <AppLoader />
+        </template>
+      </Suspense>
+    </div>
+  </Transition>
 </template>
+<style lang="css" scoped>
+.v-enter-active,
+v-leave-active {
+  transition: transform 0.2s;
+}
+
+.v-enter-from,
+v-leave-to {
+  transform: scale(0.3);
+}
+</style>
