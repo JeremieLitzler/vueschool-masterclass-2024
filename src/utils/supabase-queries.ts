@@ -9,6 +9,10 @@ export const createProjectQuery = async (project: FormDataCreateProject) => {
   return await supabase.from('projects').insert(project)
 }
 
+export const deleteProjectQuery = async (id: number) => {
+  return await supabase.from('projects').delete().eq('id', id)
+}
+
 export const allProjectsQuery = supabase
   .from('projects')
   .select()
@@ -43,6 +47,11 @@ export const updateProjectQuery = async (project = {}, id: number) => {
 export const createTaskQuery = async (task: FormDataCreateTask) => {
   return await supabase.from('tasks').insert(task)
 }
+
+export const deleteTaskQuery = async (taskId: number) => {
+  return await supabase.from('tasks').delete().eq('id', taskId)
+}
+
 export const taskByIdQuery = (id: string) => supabase.from('tasks').select().eq('id', id)
 export type TaskSingle = QueryData<ReturnType<typeof taskByIdQuery>>
 

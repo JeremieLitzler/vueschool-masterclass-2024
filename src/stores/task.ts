@@ -5,6 +5,7 @@ import { validateCache } from '@/utils/cache-validation'
 import { toISOStringWithTimezone } from '@/utils/date-format'
 import {
   createTaskQuery,
+  deleteTaskQuery,
   taskFromIdWithProjectQuery,
   tasksWithProjectQuery,
   updateTaskQuery,
@@ -85,6 +86,13 @@ export const useTaskStore = defineStore('tasks-store', () => {
     validateCacheTask(id.toString())
   }
 
+  const deleteTask = async () => {
+    if (!task.value) return
+
+    await deleteTaskQuery(task.value.id)
+    await validateCacheTasks()
+  }
+
   return {
     task,
     tasks,
@@ -92,5 +100,6 @@ export const useTaskStore = defineStore('tasks-store', () => {
     getTasks,
     createTask,
     updateTask,
+    deleteTask,
   }
 })

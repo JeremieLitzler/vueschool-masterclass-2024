@@ -51,8 +51,6 @@ export const useAuthStore = defineStore('auth-store', () => {
 
   const getSession = async () => {
     const { data, error: authError } = await retrieveCurrentSession()
-    console.log('getSession>error', authError)
-    console.log('getSession>data', data)
 
     if (authError) {
       useErrorStore().setAuthError({ authError, nextPage: RouterPathEnum.Login })
@@ -62,12 +60,9 @@ export const useAuthStore = defineStore('auth-store', () => {
   const logout = async () => {
     const { error: authError } = await logoutFromSupabase()
     if (authError) {
-      console.log('aut-store > logout', authError)
-
       useErrorStore().setAuthError({ authError, nextPage: RouterPathEnum.Login })
       return { isLoggedOut: false }
     }
-    console.log('Logout executed!')
     return { isLoggedOut: true }
   }
 

@@ -8,6 +8,7 @@ import { toISOStringWithTimezone } from '@/utils/date-format'
 import {
   allProjectsQuery,
   createProjectQuery,
+  deleteProjectQuery,
   projectWithTasksQuery,
   updateProjectQuery,
 } from '@/utils/supabase-queries'
@@ -19,7 +20,7 @@ export const useProjectStore = defineStore('project-store', () => {
   const projects = ref<AllProjects | null>()
   const project = ref<ProjectWithTasks | null>(null)
 
-  const validateCacheProjects = () =>
+  const validateCacheProjects = async () =>
     validateCache<typeof projects, typeof allProjectsQuery, typeof loadProjects, PostgrestError>({
       key: StoreCacheKey.AllProjects,
       loaderFn: loadProjects,
@@ -88,6 +89,18 @@ export const useProjectStore = defineStore('project-store', () => {
     validateCacheProject(projectProps.slug)
   }
 
+  const deleteProject = async () => {
+    if (!project.value) return
+
+    const { error } = await deleteProjectQuery(project.value.id)
+    if (error) {
+      useErrorStore().setError({ error })
+    } else {
+      console.log('deleteProject>no error')
+    }
+    await validateCacheProjects()
+  }
+
   return {
     project,
     projects,
@@ -95,5 +108,6 @@ export const useProjectStore = defineStore('project-store', () => {
     getProjects,
     createProject,
     updateProject,
+    deleteProject,
   }
 })

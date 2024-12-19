@@ -68,7 +68,6 @@ export const retrieveCurrentSession = async () => {
     return { error: authError }
   }
 
-  console.log('getSession', data)
   return { data }
 }
 
