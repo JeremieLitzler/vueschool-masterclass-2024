@@ -1,7 +1,9 @@
+import type { CacheValidationKeyInfo } from '@/types/CacheValidationInfo'
+import type { CacheValidationRefreshRequest } from '@/types/CacheValidationRefreshRequest'
 import type { Tables } from '@/types/database.types'
 import type { FormDataCreateTask } from '@/types/FormDataCreateTask'
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
-import { validateCache } from '@/utils/cache-validation'
+import { timeStampExpired, validateCache } from '@/utils/cache-validation'
 import { toISOStringWithTimezone } from '@/utils/date-format'
 import {
   createTaskQuery,
@@ -16,61 +18,98 @@ import type { PostgrestError } from '@supabase/supabase-js'
 import { useMemoize } from '@vueuse/core'
 
 export const useTaskStore = defineStore('tasks-store', () => {
+  const GET_METHODS_EXPIRATION = 900 // 15 min
   const tasks = ref<TasksWithProject | null>(null)
-  const loadTasks = useMemoize(async (key: string) => await tasksWithProjectQuery)
-  const getTasks = async () => {
-    tasks.value = null
-    const { data, error, status } = await loadTasks('tasks')
+  const task = ref<TaskFromIdWithProject | null>(null)
+  const taskLastFetchTime = ref<CacheValidationKeyInfo>({})
 
-    if (error) {
-      useErrorStore().setError({ error, customCode: status })
-    }
-    tasks.value = data
-    validateCacheTasks()
-  }
+  const getTaskKey = (id: string) => `task-id-${id}`
 
-  const validateCacheTasks = async () => {
+  const validateCacheTasks = async (forceRefresh: boolean = false) => {
     validateCache<typeof tasks, typeof tasksWithProjectQuery, typeof loadTasks, PostgrestError>({
       key: StoreCacheKey.AllTasksWithProjects as string,
       reference: tasks,
       query: tasksWithProjectQuery,
       loaderFn: loadTasks,
+      lastFetchInfo: {
+        ...taskLastFetchTime.value[StoreCacheKey.AllTasksWithProjects],
+        forceRefresh,
+      },
     })
   }
-  const validateCacheTask = (id: string) => {
+  const validateCacheTask = ({ key: id, forceRefresh }: CacheValidationRefreshRequest) => {
     validateCache<typeof task, typeof taskFromIdWithProjectQuery, typeof loadTask, PostgrestError>({
-      key: getTaskKey(id),
+      key: getTaskKey(id as string),
       filter: id,
       reference: task,
       query: taskFromIdWithProjectQuery,
       loaderFn: loadTask,
+      lastFetchInfo: { ...taskLastFetchTime.value[getTaskKey(id as string)], forceRefresh },
     })
   }
-  const task = ref<TaskFromIdWithProject | null>(null)
-  const getTaskKey = (id: string) => `task-id-${id}`
-  const loadTask = useMemoize(async (id: string) => await taskFromIdWithProjectQuery(id), {
-    // TODO > see https://vueuse.org/core/useMemoize/#resolving-cache-key
-    getKey: (id) => getTaskKey(id),
-  })
-  const getTask = async (id: string) => {
-    task.value = null
-    const { data, error, status } = await loadTask(id)
+  const forceRefreshOnTasks = () => {
+    return timeStampExpired({
+      timeStamp: taskLastFetchTime.value[StoreCacheKey.AllTasksWithProjects].timeStamp,
+      invalidateAfterSeconds: GET_METHODS_EXPIRATION,
+    })
+  }
+  const clearCache = () => {
+    console.log('called clearCache')
+    loadTasks.clear()
+    console.log('cleared Tasks')
+    loadTask.clear()
+    console.log('cleared individual Tasks')
+  }
+  const loadTasks = useMemoize(async (key: string) => {
+    const { data, error, status } = await tasksWithProjectQuery
 
     if (error) {
       useErrorStore().setError({ error, customCode: status })
+    } else {
+      taskLastFetchTime.value[StoreCacheKey.AllTasksWithProjects] = { timeStamp: Date.now() }
     }
-    task.value = data
-    validateCacheTask(id)
-  }
 
+    return data
+  })
+  const getTasks = async () => {
+    tasks.value = null
+    tasks.value = await loadTasks('tasks')
+
+    validateCacheTasks(forceRefreshOnTasks())
+  }
+  const loadTask = useMemoize(
+    async (id: string) => {
+      const { data, error, status } = await taskFromIdWithProjectQuery(id)
+
+      if (error) {
+        useErrorStore().setError({ error, customCode: status })
+      } else {
+        taskLastFetchTime.value[getTaskKey(id)] = { timeStamp: Date.now() }
+      }
+
+      return data
+    },
+    {
+      // TODO > see https://vueuse.org/core/useMemoize/#resolving-cache-key
+      getKey: (id) => getTaskKey(id),
+    },
+  )
+  const getTask = async (id: string) => {
+    task.value = null
+    task.value = await loadTask(id)
+    const forceRefresh = timeStampExpired({
+      timeStamp: taskLastFetchTime.value[getTaskKey(id)].timeStamp,
+      invalidateAfterSeconds: GET_METHODS_EXPIRATION,
+    })
+    validateCacheTask({ key: id, forceRefresh })
+  }
   const createTask = async (task: FormDataCreateTask) => {
     const { error, status } = await createTaskQuery(task)
     if (error) {
       useErrorStore().setError({ error, customCode: status })
     }
-    validateCacheTasks()
+    validateCacheTasks(true)
   }
-
   const updateTask = async () => {
     if (!task.value) return
 
@@ -83,19 +122,27 @@ export const useTaskStore = defineStore('tasks-store', () => {
     if (count && count > 1) {
       useErrorStore().setError({ error: Error('Many projects updated...'), customCode: 500 })
     }
-    validateCacheTask(id.toString())
+    validateCacheTask({ key: id, forceRefresh: true })
+    validateCacheTasks(true)
   }
-
   const deleteTask = async () => {
     if (!task.value) return
 
-    await deleteTaskQuery(task.value.id)
-    await validateCacheTasks()
+    const { error } = await deleteTaskQuery(task.value.id)
+    if (error) {
+      useErrorStore().setError({ error })
+    } else {
+      console.log('deleteTask>no error')
+    }
+    await validateCacheTasks(true)
   }
 
   return {
     task,
     tasks,
+    loadTask,
+    loadTasks,
+    clearCache,
     getTask,
     getTasks,
     createTask,

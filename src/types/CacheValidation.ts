@@ -1,3 +1,4 @@
+import type { CacheValidationInfo } from './CacheValidationInfo'
 import type { StoreCacheKey } from './StoreCacheKeys'
 
 export interface CacheValidation<Reference, Query, Loader> {
@@ -6,4 +7,6 @@ export interface CacheValidation<Reference, Query, Loader> {
   key: string | StoreCacheKey
   filter?: string | Object
   loaderFn: Loader
+  lastFetchInfo: CacheValidationInfo
+  invalidateAfterSeconds?: number
 }

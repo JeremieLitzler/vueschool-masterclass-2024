@@ -8,9 +8,31 @@ import type { CacheValidation } from '@/types/CacheValidation'
 interface WithUseMemoize<Type = string> {
   delete(key: Type): void
 }
+
+export const MAX_STALE_SECONDS = 3600
+
+export const timeStampExpired = ({
+  timeStamp,
+  invalidateAfterSeconds,
+}: {
+  timeStamp: number
+  invalidateAfterSeconds?: number
+}) => {
+  const lastFetchExpired = Date.now() + (invalidateAfterSeconds || MAX_STALE_SECONDS) < timeStamp
+  // console.log('timeStampExpired:', [
+  //   {
+  //     label: 'now - lastFetchInfo.timeStamp',
+  //     value: Date.now() + (invalidateAfterSeconds || MAX_STALE_SECONDS) - timeStamp,
+  //   },
+  //   { label: 'lastFetchExpired', value: lastFetchExpired },
+  // ])
+  return lastFetchExpired
+}
 /**
  * The method accept a CacheValidation instance expecting:
  *  - a reference which type is the "typeof" of your Reactive Ref in your store
+ *  - a last fetch reference which type is the "typeof" of your Reactive Ref holding the array
+ *    about the last fetch for the given key
  *  - a query which type is the "typeof" of your Supabase query
  *  - a loader which type is the "typeof" of the useMemoize's implementation function
  *  - a key which is the cache key for useMemoize
@@ -35,8 +57,26 @@ export const validateCache = <
   key,
   filter,
   loaderFn,
+  lastFetchInfo,
+  invalidateAfterSeconds,
 }: CacheValidation<Reference, Query, Loader>) => {
   if (reference.value) {
+    // TODO > We are calling the supabase API too much. Can't we cache in the useMemoize
+    //        the last time we used the network and only call the network again unless
+    //        the data is changed (add, update, delete) and if the last fetch was performed
+    //        more than x time ago?
+    const lastFetchExpired = timeStampExpired({
+      timeStamp: lastFetchInfo.timeStamp,
+      invalidateAfterSeconds,
+    })
+    // console.log('lastFetchInfo.forceRefresh', lastFetchInfo.forceRefresh)
+    const refreshNeeded = lastFetchInfo.forceRefresh || lastFetchExpired
+    // console.log('refreshNeeded', refreshNeeded)
+    if (!refreshNeeded) {
+      console.info(`cache for ${key} still valid. no refresh needed ✅`)
+      return // nothing to refresh
+    }
+    console.info(`cache for ${key} has staled. REFRESH NEEDED ⚠️`)
     const finalQuery = typeof query === 'function' ? query(filter) : query
     finalQuery.then(({ data, error }: { data: Reference; error: ErrorType }) => {
       if (JSON.stringify(reference.value) === JSON.stringify(data)) {

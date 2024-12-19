@@ -33,19 +33,11 @@ export const useAuthStore = defineStore('auth-store', () => {
       profile.value = null
       return
     }
-
     if (!profile.value || profile.value.id !== user.value?.id) {
-      // otherwise let's fetch the profile
-      const { data, error, status } = await userProfileQuery({
-        column: 'id',
-        value: user.value?.id,
-      })
-
-      if (error) {
-        useErrorStore().setError({ error, nextPage: nextPageOnError })
-      }
-
-      profile.value = data || null
+      const profileStore = useProfileStore()
+      const { profile: authProfile } = storeToRefs(profileStore)
+      await profileStore.getProfile({ column: 'id', value: user.value.id })
+      profile.value = authProfile.value || null
     }
   }
 

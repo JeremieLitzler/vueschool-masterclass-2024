@@ -27,6 +27,7 @@ declare module 'vue-router/auto-routes' {
     '/projects/create/': RouteRecordInfo<'/projects/create/', '/projects/create', Record<never, never>, Record<never, never>>,
     '/projects/create/[taskId]': RouteRecordInfo<'/projects/create/[taskId]', '/projects/create/:taskId', { taskId: ParamValue<true> }, { taskId: ParamValue<false> }>,
     '/register': RouteRecordInfo<'/register', '/register', Record<never, never>, Record<never, never>>,
+    '/settings/': RouteRecordInfo<'/settings/', '/settings', Record<never, never>, Record<never, never>>,
     '/tasks/': RouteRecordInfo<'/tasks/', '/tasks', Record<never, never>, Record<never, never>>,
     '/tasks/[id]': RouteRecordInfo<'/tasks/[id]', '/tasks/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/tasks/create/': RouteRecordInfo<'/tasks/create/', '/tasks/create', Record<never, never>, Record<never, never>>,
