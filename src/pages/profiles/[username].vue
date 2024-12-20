@@ -5,7 +5,6 @@
         <AvatarImage :src="profile?.avatar_url || ''" alt="@radix-vue" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
-
       <p class="mt-2 text-gray-500">@{{ profile?.username }}</p>
       <h1 class="mt-5 text-4xl font-bold">{{ profile?.full_name }}</h1>
       <p class="mt-2 text-sm">{{ profile?.bio }}</p>
@@ -21,19 +20,9 @@ import { userProfileQuery } from '@/utils/supabase-queries'
 usePageStore().pageData = { title: '' }
 
 const { username } = useRoute('/profiles/[username]').params
-
-const profile = ref<Tables<'profiles'> | null>(null)
-const getProfile = async () => {
-  profile.value = null
-  const { data, error, status } = await userProfileQuery({ column: 'username', value: username })
-  if (error) {
-    useErrorStore().setError({ error, customCode: status })
-  }
-
-  profile.value = data
-}
-
-await getProfile()
+const profileStore = useProfileStore()
+const { profile } = storeToRefs(profileStore)
+await profileStore.getProfile({ column: 'username', value: username })
 </script>
 
 <style scoped></style>
