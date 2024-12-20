@@ -12,8 +12,8 @@ onErrorCaptured((error) => {
   errorStore.setError({ error })
 })
 
-const AuthLayout = defineAsyncComponent(() => import('@/components/layout/AuthLayout.vue'))
-const GuestLayout = defineAsyncComponent(() => import('@/components/layout/GuestLayout.vue'))
+// const AuthLayout = defineAsyncComponent(() => import('@/components/layout/AuthLayout.vue'))
+// const GuestLayout = defineAsyncComponent(() => import('@/components/layout/GuestLayout.vue'))
 
 useMeta({ title: 'Homepage | Pulse' })
 </script>
@@ -23,7 +23,8 @@ useMeta({ title: 'Homepage | Pulse' })
   <Transition name="fade" mode="out-in">
     <div class="w-full">
       <Suspense>
-        <Component :is="user ? AuthLayout : GuestLayout" :key="user?.id">
+        <AuthLayout :key="user?.id">
+          <!-- <Component :is="user ? AuthLayout : GuestLayout" :key="user?.id"> -->
           <AppError v-if="activeError" />
           <RouterView v-else v-slot="{ Component, route }">
             <Transition name="fade" mode="out-in">
@@ -43,7 +44,8 @@ useMeta({ title: 'Homepage | Pulse' })
               </div>
             </Transition>
           </RouterView>
-        </Component>
+          <!-- </Component> -->
+        </AuthLayout>
         <template #fallback>
           <AppLoader />
         </template>
