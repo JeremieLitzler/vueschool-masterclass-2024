@@ -67,7 +67,7 @@ declare module 'vue' {
     GuestLayout: typeof import('./src/components/layout/GuestLayout.vue')['default']
     Input: typeof import('./src/components/ui/input/Input.vue')['default']
     Label: typeof import('./src/components/ui/label/Label.vue')['default']
-    NavBarTop: typeof import('./src/components/layout/NavBarTop.vue')['default']
+    NavbarTop: typeof import('./src/components/layout/NavbarTop.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('./src/components/ui/select/Select.vue')['default']
