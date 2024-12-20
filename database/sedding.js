@@ -4,7 +4,8 @@
 import { faker } from '@faker-js/faker'
 import { createClient } from '@supabase/supabase-js'
 
-console.log(import.meta.env)
+console.log('import.meta.env', import.meta.env)
+console.log('process.env', process.env)
 const supabaseUrl = process.env.VITE_SUPABASE_URL
 const supabaseKey = process.env.SUPABASE_PROJECT_SERVICE_ROLE
 
@@ -82,7 +83,7 @@ const createPrimaryTestUser = async () => {
       avatar_url: `https://i.pravatar.cc/150?u=${data.user.id}`,
     })
 
-    logStep('Primary test user created successfully.')
+    logStep(`Primary test user <${userId}> created successfully.`)
     return userId
   }
 }

@@ -73,3 +73,11 @@ as PERMISSIVE
 for SELECT
 to authenticated
 using (true);
+
+
+create policy "Enable insert access for authenticated users only"
+on "public"."profiles"
+as PERMISSIVE
+for INSERT
+to authenticated
+with check (true);
