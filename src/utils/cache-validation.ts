@@ -8,9 +8,21 @@ import type { CacheValidation } from '@/types/CacheValidation'
 interface WithUseMemoize<Type = string> {
   delete(key: Type): void
 }
-
+/**
+ * Default seconds delta at which the cache is considered staled.
+ */
 export const MAX_STALE_SECONDS = 3600
-
+/**
+ *  We are calling the supabase API too much. Can't we cache in the useMemoize
+ *  the last time we used the network and only call the network again unless
+ *  the data is changed (add, update, delete) and if the last fetch was performed
+ *  more than x time ago?
+ *
+ * @param Object Object exepect a timeStamp value and seconds delta when the cache
+ * should be invalidated. If the seconds delta isn't provided, then the default is
+ * MAX_STALE_SECONDS
+ * @returns
+ */
 export const timeStampExpired = ({
   timeStamp,
   invalidateAfterSeconds,
@@ -61,29 +73,25 @@ export const validateCache = <
   invalidateAfterSeconds,
 }: CacheValidation<Reference, Query, Loader>) => {
   if (reference.value) {
-    // TODO > We are calling the supabase API too much. Can't we cache in the useMemoize
-    //        the last time we used the network and only call the network again unless
-    //        the data is changed (add, update, delete) and if the last fetch was performed
-    //        more than x time ago?
     const lastFetchExpired = timeStampExpired({
       timeStamp: lastFetchInfo.timeStamp,
       invalidateAfterSeconds,
     })
-    // console.log('lastFetchInfo.forceRefresh', lastFetchInfo.forceRefresh)
     const refreshNeeded = lastFetchInfo.forceRefresh || lastFetchExpired
-    // console.log('refreshNeeded', refreshNeeded)
     if (!refreshNeeded) {
-      console.info(`cache for ${key} still valid. no refresh needed ✅`)
+      console.info(`cache for <${key}> still valid. no refresh needed ✅`)
       return // nothing to refresh
     }
-    console.info(`cache for ${key} has staled. REFRESH NEEDED ⚠️`)
+    console.info(`cache for <${key}> has staled. REFRESH NEEDED ⚠️`)
     const finalQuery = typeof query === 'function' ? query(filter) : query
     finalQuery.then(({ data, error }: { data: Reference; error: ErrorType }) => {
       if (JSON.stringify(reference.value) === JSON.stringify(data)) {
+        console.info('current remote data and cache identical!')
         return
       } else {
         loaderFn.delete(key as string)
         if (!error && data) {
+          console.info(`data for <${key}> was refreshed!`)
           reference.value = data
         }
       }

@@ -121,7 +121,9 @@ export const useProjectStore = defineStore('project-store', () => {
       useErrorStore().setError({ error: Error('Many projects updated...'), customCode: 500 })
     }
     validateCacheProject({ key: projectProps.slug, forceRefresh: true })
-    validateCacheProjects(true)
+    // Below replaces "validateCacheProjects(true)" as when the update is done,
+    // the list isn't refreshed...
+    loadProjects.clear()
   }
 
   const deleteProject = async () => {
@@ -133,7 +135,7 @@ export const useProjectStore = defineStore('project-store', () => {
     } else {
       console.log('deleteProject>no error')
     }
-    await validateCacheProjects(true)
+    loadProjects.clear()
   }
 
   return {

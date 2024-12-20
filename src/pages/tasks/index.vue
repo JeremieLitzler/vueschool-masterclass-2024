@@ -1,6 +1,23 @@
+<script setup lang="ts">
+import { columns } from '@/utils/datatable-columns-task'
+
+usePageStore().pageData.title = 'Tasks'
+useMeta({ title: 'All Tasks | Pulse' })
+
+const taskStore = useTaskStore()
+const { tasks } = storeToRefs(taskStore)
+await taskStore.getTasks()
+
+// TODO > computed or binded ":v-model" prop works
+const taskStatus = computed<string>((status) => {
+  console.log('taskStatus>computed: ', status)
+  return status || ''
+})
+</script>
+
 <template>
   <!-- 
-    This demonstrates that the DataTable could be entirely customized
+    This page demonstrates that the DataTable could be entirely customized
     using named and scoped slots.
     
     Slot in Vue.js is important to understand.
@@ -50,22 +67,5 @@
     </template>
   </DataTable>
 </template>
-
-<script setup lang="ts">
-import { columns } from '@/utils/datatable-columns-task'
-
-usePageStore().pageData.title = 'Tasks'
-useMeta({ title: 'All Tasks | Pulse' })
-
-const taskStore = useTaskStore()
-const { tasks } = storeToRefs(taskStore)
-await useTaskStore().getTasks()
-
-// TODO > computed or :v-model
-const taskStatus = computed<string>((status) => {
-  console.log('taskStatus>computed: ', status)
-  return status || ''
-})
-</script>
 
 <style scoped></style>

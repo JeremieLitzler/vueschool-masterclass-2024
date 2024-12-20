@@ -123,7 +123,7 @@ export const useTaskStore = defineStore('tasks-store', () => {
       useErrorStore().setError({ error: Error('Many projects updated...'), customCode: 500 })
     }
     validateCacheTask({ key: id, forceRefresh: true })
-    validateCacheTasks(true)
+    loadTasks.clear()
   }
   const deleteTask = async () => {
     if (!task.value) return
@@ -134,7 +134,7 @@ export const useTaskStore = defineStore('tasks-store', () => {
     } else {
       console.log('deleteTask>no error')
     }
-    await validateCacheTasks(true)
+    loadTasks.clear()
   }
 
   return {

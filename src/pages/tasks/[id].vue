@@ -25,8 +25,11 @@ if (task.value) {
   await profileStore.getProfile({ column: 'id', value: task.value.profile_id })
 }
 // Update logic
-const updateTask = () => {
-  taskStore.updateTask()
+// const updating = ref(false)
+const updateTask = async () => {
+  // updating.value = true
+  await taskStore.updateTask()
+  // updating.value = false
 }
 
 // Delete Task
