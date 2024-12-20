@@ -1,10 +1,7 @@
 <template>
-  <aside
-    class="flex flex-col h-screen gap-2 border-r fixed bg-muted/40 transition-[width]"
-    :class="{ 'w-52': menuOpen, 'w-24': !menuOpen }"
-  >
+  <aside class="flex flex-col h-screen gap-2 border-r fixed bg-muted/40 transition-[width]">
     <div class="flex h-16 items-center border-b px-2 lg:px-4 shrink-0 gap-1 justify-between">
-      <Button tabindex="0" variant="outline" size="icon" class="w-8 h-8" @click="toggleMenu">
+      <Button tabindex="0" variant="outline" size="icon" class="w-8 h-8">
         <iconify-icon icon="lucide:menu"></iconify-icon>
       </Button>
 
@@ -105,15 +102,15 @@ const settingsLinks: LinkProp[] = [
   },
 ]
 
-const { menuOpen, toggleMenu } = useMenu()
+// const { menuOpen, toggleMenu } = useMenu()
 
-const { width: windowWidth } = useWindowSize()
-watchEffect(() => {
-  if (windowWidth.value > 1024) {
-    menuOpen.value = true
-  } else {
-    menuOpen.value = false
-  }
-})
+// const { width: windowWidth } = useWindowSize()
+// watchEffect(() => {
+//   if (windowWidth.value > 1024) {
+//     menuOpen.value = true
+//   } else {
+//     menuOpen.value = false
+//   }
+// })
 </script>
 <style scoped></style>
