@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import type { LinkProp } from '@/types/LinkProp'
-import SideBarLinks from '@/components/layout/SidebarLinks.vue'
+import SideBarLinks from '@/components/layout/SideBarLinks.vue'
 import { RouterPathEnum } from '@/types/RouterPathEnum'
 import { SideBarActionsEnum } from '@/types/SideBarActionsEnum'
 import type { SideBarLinkAction } from '@/types/SideBarLinkAction'
