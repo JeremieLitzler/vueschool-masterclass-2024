@@ -1,4 +1,5 @@
 <script setup lang="ts">
+console.log('NavbarTop>script:setup...')
 const authStore = useAuthStore()
 const { profile } = storeToRefs(authStore)
 

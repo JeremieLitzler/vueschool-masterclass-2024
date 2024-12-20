@@ -57,6 +57,8 @@ import type { SideBarLinkAction } from '@/types/SideBarLinkAction'
 import router from '@/router'
 import { useWindowSize } from '@vueuse/core'
 
+console.log('SideBar>script:setup...')
+
 const executeAction = async (payload: SideBarLinkAction) => {
   console.log('Clicked a side bar link', payload)
 
