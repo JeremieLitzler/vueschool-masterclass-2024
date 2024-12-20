@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Sidebar @@create-task="openTaskModal = true" @@create-project="openProjectModal = true" />
+    <SideBar @@create-task="openTaskModal = true" @@create-project="openProjectModal = true" />
     <FormCreateProject v-model="openProjectModal" />
     <FormCreateTask v-model="openTaskModal" />
 

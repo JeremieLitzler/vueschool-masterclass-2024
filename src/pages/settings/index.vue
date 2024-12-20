@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { StoreCacheKey } from '@/types/StoreCacheKeys'
-import { assert } from 'console'
 
 type CacheType = {
   name: string
