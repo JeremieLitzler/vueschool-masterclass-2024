@@ -61,7 +61,6 @@ export const useErrorStore = defineStore('error-store', () => {
       console.error('Got an AuthApiError')
     }
     if (authError instanceof AuthRetryableFetchError) {
-      debugger
       console.error('Got an AuthRetryableFetchError')
       authError.status = 401
       authError.message = 'Check Supabase project. It might be sleeping after a week of inactivity'

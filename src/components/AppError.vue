@@ -5,7 +5,6 @@ const { activeError, isCustomError } = useErrorStore()
 
 const error = ref(activeError)
 console.log('AppError', { ...activeError })
-debugger
 const message = ref('')
 const customCode = ref(0)
 const details = ref('')
